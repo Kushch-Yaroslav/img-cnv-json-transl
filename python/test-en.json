@@ -1,0 +1,8 @@
+{
+  "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "header": {
+    "reload": "Reload",
+    "search": "Search",
+    "world": "World"
+  }
+}

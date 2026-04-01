@@ -1,0 +1,200 @@
+.wrap {
+    position: relative;
+    z-index: 3;
+    padding: clamp(16px, 3vw, 28px) 0 56px;
+    color: #fff;
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+}
+
+.ready {
+    animation: pageIn 680ms cubic-bezier(.2, .9, .2, 1) both;
+}
+
+@keyframes pageIn {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 12px, 0)
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0)
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(12px, 2.2vw, 20px);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.title {
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: .6px;
+    font-size: clamp(26px, 4.6vw, 46px);
+    text-shadow: 0 6px 26px rgba(0, 0, 0, .65);
+}
+
+.accent {
+    background: linear-gradient(90deg, #fff 0%, #caa7ff 38%, #7a29ff 72%, #ff61e7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 6px 24px rgba(185, 139, 255, .5));
+}
+
+.subtitle {
+    margin: 10px auto 0;
+    max-width: 840px;
+    color: #efeaff;
+    opacity: .95;
+    font-size: clamp(14px, 1.7vw, 18px);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, .55);
+}
+
+/* метки */
+.stats {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 14px 0 6px;
+}
+
+.badge {
+    font-size: 13px;
+    letter-spacing: .3px;
+    background: linear-gradient(90deg, rgba(167, 108, 255, .98), rgba(106, 0, 255, .98));
+    padding: 6px 12px;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(106, 0, 255, .5), 0 0 0 1px rgba(255, 255, 255, .25) inset;
+    border: 1px solid rgba(255, 255, 255, .28);
+}
+
+/* двуколоночка */
+.grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 1.1fr .9fr;
+}
+
+@media (max-width: 980px) {
+    .grid {
+        grid-template-columns: 1fr
+    }
+}
+
+/* карточки (чуть темнее и чётче) */
+.card {
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .05)),
+    linear-gradient(0deg, rgba(7, 7, 12, .55), rgba(7, 7, 12, .55));
+    border: 1px solid rgba(255, 255, 255, .26);
+    box-shadow: 0 26px 70px rgba(8, 4, 22, .65),
+    0 0 0 1px rgba(255, 255, 255, .06) inset;
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    overflow: clip;
+    transform: translate3d(0, 18px, 0) scale(.98);
+    opacity: 0;
+    animation: cardIn 760ms cubic-bezier(.2, .9, .2, 1) both;
+}
+
+.card:nth-of-type(1) {
+    animation-delay: 90ms
+}
+
+.card:nth-of-type(2) {
+    animation-delay: 160ms
+}
+
+@keyframes cardIn {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 18px, 0) scale(.98)
+    }
+    60% {
+        opacity: 1;
+        transform: translate3d(0, -6px, 0) scale(1.02)
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1)
+    }
+}
+
+/* панель действий / кнопки */
+.actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.btnPrimary, .btnGhost {
+    appearance: none;
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-weight: 800;
+    letter-spacing: .3px;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease;
+}
+
+.btnPrimary {
+    background: linear-gradient(90deg, #b98bff, #6a00ff 45%, #ff61e7 90%);
+    color: #fff;
+    box-shadow: 0 14px 30px rgba(106, 0, 255, .55), 0 0 0 1px rgba(255, 255, 255, .14) inset;
+}
+
+.btnPrimary:hover {
+    filter: saturate(115%);
+    transform: translateY(-1px)
+}
+
+.btnPrimary:active {
+    transform: translateY(0) scale(.99)
+}
+
+.btnPrimary:disabled {
+    opacity: .5;
+    cursor: default;
+    transform: none
+}
+
+.btnGhost {
+    background: rgba(255, 255, 255, .10);
+    color: #fff;
+    box-shadow: 0 12px 26px rgba(0, 0, 0, .35), 0 0 0 1px rgba(255, 255, 255, .14) inset;
+}
+
+.btnGhost:hover {
+    filter: saturate(115%);
+    transform: translateY(-1px)
+}
+
+.btnGhost:active {
+    transform: translateY(0) scale(.99)
+}
+
+.btnGhost:disabled {
+    opacity: .5;
+    cursor: default;
+    transform: none
+}
+
+.muted {
+    opacity: .78;
+    font-size: .95em
+}
+
+.status {
+    margin-left: 6px
+}

@@ -1,0 +1,13 @@
+body{
+    margin: 0;
+}
+input{
+    box-sizing: border-box;
+}
+option{
+    background-color: #E9E9E9;
+    color: black;
+}
+.option:hover{
+    background-color: gray;
+}

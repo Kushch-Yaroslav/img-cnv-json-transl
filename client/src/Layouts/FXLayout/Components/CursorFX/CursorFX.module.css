@@ -1,0 +1,39 @@
+.wrap {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+}
+
+.dot {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    border-radius: 50%;
+    transform: translate3d(0, 0, 0);
+    background: #fff;
+    mix-blend-mode: difference;
+}
+
+.ring {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border-radius: 50%;
+    transform: translate3d(0, 0, 0);
+    border: 1px solid rgba(255, 255, 255, .7);
+    box-shadow: 0 0 24px rgba(173, 110, 255, .35);
+    mix-blend-mode: difference;
+}
+
+@media (pointer: coarse) {
+    .wrap {
+        display: none
+    }
+}

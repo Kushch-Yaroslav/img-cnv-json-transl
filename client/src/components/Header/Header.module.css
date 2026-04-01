@@ -1,0 +1,140 @@
+:root{
+    --ink:#fff;
+    --ink-2:#ece8ff;
+    --line:#ffffff24;
+
+    --g1:#a76cff; --g2:#6a00ff; --g3:#ff61e7;        /* фирменный неон */
+    --ok:#36e18e;
+
+    --h-h:74px;          /* высота хэдера */
+    --pad-x:clamp(16px,4vw,60px);
+}
+
+/* STICKY + фоновая полоса */
+.header{
+    position:sticky; top:0; z-index:100;
+    width:100%; height:var(--h-h);
+    overflow:clip;
+    /* плотный градиентный бар, не зависит от задника */
+    background:linear-gradient(90deg,#28164e 0%,#35206a 45%,#4b2d84 100%);
+    border-bottom:1px solid var(--line);
+    box-shadow:0 10px 24px rgba(0,0,0,.35);
+}
+
+/* мягкая аурора-подсветка внутри хэдера */
+.aurora{
+    position:absolute; inset:-40% -10% 0 -10%;
+    background:
+            radial-gradient(26rem 14rem at 10% 20%, #b38dff2a, transparent 60%),
+            radial-gradient(32rem 18rem at 70% -10%, #ff61e722, transparent 60%),
+            radial-gradient(24rem 12rem at 95% 60%, #6a00ff22, transparent 60%);
+    filter: blur(8px);
+    animation: auroraMove 16s linear infinite alternate;
+    pointer-events:none;
+}
+@keyframes auroraMove{
+    0%{ transform: translate3d(0,0,0) hue-rotate(0deg); }
+    100%{ transform: translate3d(-4%,2%,0) hue-rotate(20deg); }
+}
+
+/* сетка контента */
+.row{
+    position:relative;
+    height:100%;
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+    padding:0 var(--pad-x);
+    color:var(--ink);
+}
+
+/* ===== ЛОГО-БЕЙДЖ с аним. рамкой (conic-gradient) ===== */
+.logoBadge{
+    position:relative; isolation:isolate;
+    display:flex; align-items:baseline; gap:6px;
+    padding:10px 16px; border-radius:14px; text-decoration:none; color:var(--ink);
+    background:linear-gradient(180deg,#ffffff12,#ffffff06);
+    border:1px solid #ffffff33;
+    box-shadow:0 0 0 1px #ffffff0a inset, 0 8px 24px rgba(0,0,0,.35);
+    transition:transform .18s ease, filter .2s ease;
+}
+.logoBadge::before{
+    /* градиентная рамка (чистый CSS без картинок) */
+    content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px;
+    background:conic-gradient(from 220deg, var(--g1), var(--g2) 45%, var(--g3) 75%, var(--g1));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    filter:drop-shadow(0 0 14px rgba(166,108,255,.35));
+    animation:borderSpin 10s linear infinite;
+    pointer-events:none; opacity:.7;
+}
+@keyframes borderSpin{ to{ transform:rotate(1turn); } }
+
+.logoBadge:hover{ transform:translateY(-1px); filter:saturate(1.05); }
+
+.logoMain{ font-weight:900; font-size:22px; text-shadow:0 4px 14px rgba(0,0,0,.5); }
+.logoAccent{
+    font-weight:1000; font-size:22px;
+    background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3));
+    -webkit-background-clip:text; color:transparent;
+    text-shadow:0 0 18px #a77bff77;
+}
+
+/* ===== НАВИГАЦИЯ: «живая» подсветка ===== */
+.nav{ display:flex; justify-content:center; gap:clamp(12px,3vw,28px); }
+.navItem{
+    position:relative; display:inline-flex; align-items:center; justify-content:center;
+    height:42px; padding:0 16px; border-radius:12px;
+    font-weight:900; font-size:15.5px; letter-spacing:.25px;
+    color:#ece8ff; text-decoration:none; user-select:none;
+    transition: color .18s ease, transform .18s ease, background .25s ease, box-shadow .22s ease;
+    background:linear-gradient(180deg,#ffffff12,#ffffff08);
+    border:1px solid #ffffff1f;
+    box-shadow:0 6px 16px rgba(0,0,0,.18) inset;
+}
+.navItem::after{
+    /* «плазменная» подчёркивающая полоса */
+    content:""; position:absolute; left:16px; right:16px; bottom:6px; height:3px; border-radius:2px;
+    background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3));
+    box-shadow:0 0 10px rgba(255,97,231,.6);
+    transform:scaleX(0); transform-origin:center; transition:transform .22s ease;
+}
+.navItem:hover{
+    color:#fff; transform:translateY(-1px);
+    background:linear-gradient(180deg,#ffffff18,#ffffff0c);
+    box-shadow:0 10px 24px rgba(0,0,0,.22) inset, 0 0 0 1px #ffffff1f;
+}
+.navItem:hover::after{ transform:scaleX(1); }
+.active{
+    color:#fff;
+    background:linear-gradient(180deg,#ffffff22,#ffffff10);
+    box-shadow:0 10px 24px rgba(0,0,0,.22) inset, 0 0 0 1px #ffffff29;
+}
+.active::after{ transform:scaleX(1); }
+
+/* ===== АККАУНТ ===== */
+.account{ display:flex; align-items:center; gap:10px; }
+.plan{
+    font-size:13px; font-weight:900; color:var(--ok);
+    padding:6px 10px; border-radius:999px;
+    background:rgba(54,225,142,.15); border:1px solid rgba(54,225,142,.35);
+    text-shadow:0 0 10px rgba(54,225,142,.45);
+}
+.avatarBtn{
+    width:40px; height:40px; border-radius:50%;
+    border:1px solid #ffffff3a;
+    background:linear-gradient(135deg,#a76cff33,#6a00ff3a);
+    box-shadow:0 0 0 1px #ffffff0d inset;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; cursor:pointer; transition:transform .15s ease, box-shadow .2s ease;
+}
+.avatarBtn:hover{ transform:scale(1.06); box-shadow:0 0 14px #a76cff66; }
+
+/* адаптив */
+@media (max-width:900px){
+    :root{ --h-h:66px; }
+    .logoMain,.logoAccent{ font-size:20px; }
+    .navItem{ font-size:14.5px; padding:0 12px; }
+    .avatarBtn{ width:36px; height:36px; font-size:18px; }
+}

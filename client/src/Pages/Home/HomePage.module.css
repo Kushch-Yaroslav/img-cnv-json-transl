@@ -1,0 +1,358 @@
+.home {
+    position: relative;
+    z-index: 3;
+    color: white;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 56px 20px 24px;
+}
+
+.titleWrap {
+    position: relative;
+    display: inline-block;
+    cursor: default;
+}
+
+.title {
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: .6px;
+    font-size: clamp(32px, 5vw, 70px);
+    color: #fff;
+    text-shadow: 0 6px 26px rgba(0, 0, 0, .45);
+}
+
+.titleAccent {
+    background: linear-gradient(90deg, #fff 0%, #b98bff 40%, #6a00ff 75%, #ff61e7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 6px 24px rgba(185, 139, 255, .35));
+}
+
+.sparkle {
+    position: absolute;
+    right: -18px;
+    top: -10px;
+    font-size: 18px;
+    animation: sparkle 2.4s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        transform: translateY(0) rotate(0);
+        opacity: .9
+    }
+    50% {
+        transform: translateY(-4px) rotate(15deg);
+        opacity: 1
+    }
+}
+
+.subtitle {
+    margin: 12px auto 0;
+    max-width: 860px;
+    font-weight: bold;
+    font-size: clamp(16px, 2vw, 20px);
+    color: #f0ecff;
+    text-shadow: 0 1px 10px rgba(20, 0, 40, .35);
+    opacity: .95;
+}
+
+/* Grid */
+.grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    padding: 28px 20px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* LINK-обёртка (не двигаем) */
+.cardLink {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    outline: none;
+}
+
+/* ДВИЖИМАЯ коробка с визуалом */
+.cardBox {
+    position: relative;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .06));
+    border: 1px solid rgba(255, 255, 255, .18);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, .35), 0 0 0 1px rgba(255, 255, 255, .04) inset;
+    backdrop-filter: blur(10px) saturate(120%);
+    overflow: hidden;
+    isolation: isolate;
+    opacity: 0; /* появление делаем анимацией */
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+}
+
+/* Градиентная рамка */
+.cardBox::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, #b98bff, #6a00ff 45%, #ff61e7 75%, #b98bff);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: .55;
+    filter: drop-shadow(0 12px 30px rgba(150, 0, 255, .35));
+    pointer-events: none;
+}
+
+/* Hover эффекты */
+.cardLink:hover .cardBox {
+    box-shadow: 0 22px 60px rgba(0, 0, 0, .45), 0 0 0 1px rgba(255, 255, 255, .06) inset;
+    filter: saturate(115%);
+}
+
+/* Focus ring */
+.cardLink:focus-visible .cardBox {
+    outline: 2px solid rgba(186, 130, 255, .95);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(186, 130, 255, .25), 0 18px 56px rgba(0, 0, 0, .45);
+}
+
+/* Shine */
+.cardShine {
+    position: absolute;
+    inset: -40%;
+    pointer-events: none;
+    transform: translate3d(-20%, -20%, 0);
+    transition: opacity 120ms ease;
+    background: radial-gradient(ellipse at var(--glare-x, 50%) var(--glare-y, 50%),
+    rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 35%),
+    conic-gradient(from 210deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 60%);
+    mix-blend-mode: screen;
+    opacity: calc(.20 + .35 * var(--glare, .0));
+}
+
+/* Внутренний контент + tilt */
+.cardInner {
+    position: relative;
+    padding: 24px 22px 20px;
+    min-height: 200px;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
+    transform: perspective(900px) rotateX(var(--tilt-rx)) rotateY(var(--tilt-ry)) scale(var(--tilt-scale));
+    transition: transform 120ms ease;
+}
+
+.cardLink:hover .cardInner {
+    transform: perspective(900px) rotateX(var(--tilt-rx, 0deg)) rotateY(var(--tilt-ry, 0deg)) scale(calc(var(--tilt-scale, 1) * 1.012));
+}
+
+/* Контент */
+.cardIcon {
+    font-size: 32px;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .35));
+}
+
+.cardTitle {
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: .3px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .25), 0 10px 24px rgba(0, 0, 0, .35);
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+.cardDesc {
+    line-height: 1.45;
+    font-size: 20px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: bold;
+    background: #fff5b8;
+    background: linear-gradient(90deg, rgba(255, 245, 184, 1) 0%, rgba(255, 214, 99, 1) 50%, rgba(250, 250, 250, 1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.cardBadge {
+    margin-top: 8px;
+    justify-self: start;
+    font-size: 12px;
+    letter-spacing: .3px;
+    background: linear-gradient(90deg, rgba(167, 108, 255, .92), rgba(106, 0, 255, .92));
+    padding: 6px 12px;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(106, 0, 255, .35), 0 0 0 1px rgba(255, 255, 255, .2) inset;
+    border: 1px solid rgba(255, 255, 255, .22);
+}
+
+/* Появление */
+@keyframes cardWrapEnter {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 24px, 0) scale(.96);
+    }
+    60% {
+        opacity: 1;
+        transform: translate3d(0, -6px, 0) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+}
+
+/* ready-вариант: класс висит на <a>, анимируем box */
+.cardLink.cardReady .cardBox {
+    animation: cardWrapEnter 780ms cubic-bezier(.2, .9, .2, 1) both;
+    animation-delay: var(--enter-delay, 0ms);
+}
+
+/* Лёгкое «плавание» контента */
+@keyframes floatSoft {
+    0% {
+        transform: translateY(0)
+    }
+    50% {
+        transform: translateY(-3px)
+    }
+    100% {
+        transform: translateY(0)
+    }
+}
+
+.cardLink.cardReady .cardInner {
+    animation: floatSoft 6s ease-in-out 900ms infinite;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 18px 20px 40px;
+    opacity: .85;
+    font-size: 13px;
+}
+
+
+/* когда тянем — запрещаем выделение и курсор-руку */
+.bodyDragging {
+    cursor: grabbing !important;
+    user-select: none !important;
+}
+
+/* вешается на <a.cardLink> во время драга для приглушения спейсера */
+.cardDragging .cardBox {
+    opacity: .35;
+    filter: saturate(80%) blur(.2px);
+    transition: opacity .15s ease, filter .15s ease;
+}
+
+/* схлопывание спейсера: анимируем только height */
+.cardSpacerCollapsing {
+    overflow: hidden;
+    transition: height 260ms cubic-bezier(.2, .9, .2, 1);
+    will-change: height;
+    padding-top: 0 !important; /* если вдруг у ссылки будет внутренний паддинг */
+    padding-bottom: 0 !important;
+    margin-top: 0 !important; /* если где-то добавите внешние отступы */
+    margin-bottom: 0 !important;
+}
+
+/* плавающий аватар карточки (clone) */
+.dragAvatar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    pointer-events: none;
+    will-change: transform, opacity;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, .45));
+    transform-origin: 0 0;
+    border-radius: 18px; /* чтобы совпало с оригиналом */
+    color: #fff;
+}
+
+
+.dragAvatar .cardBox {
+    opacity: 1 !important;
+    animation: none !important;
+    filter: none;
+}
+
+.dragAvatar .cardInner {
+    animation: none !important;
+    transform: none !important;
+}
+
+.cardMover {
+    cursor: grab;
+}
+
+.cardMover:active {
+    cursor: grabbing;
+}
+
+/* body-глобаль лучше сделать реально глобальной */
+:global(.bodyDragging) {
+    cursor: grabbing !important;
+    user-select: none !important;
+}
+
+.cardGhost {
+    border-radius: 18px;
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, .18);
+    opacity: .18;
+    transition: transform 320ms cubic-bezier(.16, 1.1, .23, 1);
+}
+
+.flipAnim {
+    transition: transform 360ms cubic-bezier(.2, 1.35, .2, 1), filter 240ms ease;
+}
+
+/*:global(.flipAnim) {}*/
+
+@media (max-width: 480px) {
+    .cardInner {
+        min-height: 170px;
+        padding: 20px 18px;
+    }
+
+    .cardTitle {
+        font-size: 20px;
+    }
+}
+
+.ripple {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(255, 255, 255, .35), rgba(255, 255, 255, 0) 60%);
+    transform: translate(-50%, -50%) scale(0.8);
+    animation: rippleFade .42s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes rippleFade {
+    to {
+        transform: translate(-50%, -50%) scale(5.5);
+        opacity: 0;
+    }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    .cardLink.cardReady .cardBox,
+    .cardLink.cardReady .cardInner {
+        animation: none !important;
+        transition: none !important;
+    }
+}

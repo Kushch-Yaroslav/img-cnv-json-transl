@@ -1,14 +1,11 @@
 {
-  "name": "img-webp-ui",
-  "version": "1.0.0",
-  "type": "module",
+  "private": true,
   "scripts": {
-    "start": "node server.mjs"
+    "start": "npm --prefix server start",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server start"
   },
-  "dependencies": {
-    "archiver": "^7.0.1",
-    "express": "^4.19.2",
-    "multer": "^1.4.5-lts.2",
-    "sharp": "^0.33.4"
+  "devDependencies": {
+    "cross-env": "^10.0.0"
   }
 }

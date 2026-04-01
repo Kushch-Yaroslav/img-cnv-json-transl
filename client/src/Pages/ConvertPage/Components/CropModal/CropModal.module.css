@@ -1,0 +1,252 @@
+.backdrop{
+    position: fixed; /* фикс поверх окна */
+    inset: 0;
+    background: rgba(4,2,12,.6);
+    backdrop-filter: blur(8px) saturate(130%);
+    display: grid;
+    place-items: center;   /* центровка модалки */
+    z-index: 10000;        /* выше любых карточек/хедеров */
+}
+
+.modal {
+    width: min(96vw, 1080px);
+    max-height: 92vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .06)),
+    linear-gradient(0deg, rgba(12, 12, 20, .55), rgba(12, 12, 20, .55));
+    border: 1px solid rgba(255, 255, 255, .22);
+    box-shadow: 0 30px 90px rgba(8, 4, 22, .6), 0 0 0 1px rgba(255, 255, 255, .08) inset;
+    color: #fff;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.title {
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: .3px;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btnPrimary, .btnGhost, .btnClose {
+    appearance: none;
+    border: 0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform .12s ease, filter .2s ease, opacity .2s ease;
+}
+
+.btnPrimary {
+    background: linear-gradient(90deg, #b98bff, #6a00ff 60%, #ff61e7 100%);
+    color: #fff;
+    box-shadow: 0 12px 28px rgba(106, 0, 255, .45);
+}
+
+.btnGhost {
+    background: rgba(255, 255, 255, .10);
+    color: #fff;
+    box-shadow: 0 12px 26px rgba(0, 0, 0, .35), 0 0 0 1px rgba(255, 255, 255, .14) inset;
+}
+
+.btnPrimary:hover, .btnGhost:hover {
+    filter: saturate(115%);
+    transform: translateY(-1px);
+}
+
+.btnClose {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .10);
+}
+
+.stage {
+    position: relative;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .06);
+    overflow: hidden;
+    min-height: 420px;
+}
+
+.canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.mask {
+    position: absolute;
+    inset: 0;
+    pointer-events: none; /* клики не проходят, кроме рамки */
+}
+
+.cropRect {
+    position: absolute;
+    pointer-events: auto;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, .45); /* затемнение вокруг */
+    border: 2px solid rgba(255, 255, 255, .9);
+    border-radius: 8px;
+}
+
+.handle {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+.h_n {
+    top: 0;
+    left: 50%;
+    cursor: ns-resize;
+}
+
+.h_s {
+    top: 100%;
+    left: 50%;
+    cursor: ns-resize;
+}
+
+.h_w {
+    top: 50%;
+    left: 0;
+    cursor: ew-resize;
+}
+
+.h_e {
+    top: 50%;
+    left: 100%;
+    cursor: ew-resize;
+}
+
+.h_nw {
+    top: 0;
+    left: 0;
+    cursor: nwse-resize;
+}
+
+.h_ne {
+    top: 0;
+    left: 100%;
+    cursor: nesw-resize;
+}
+
+.h_sw {
+    top: 100%;
+    left: 0;
+    cursor: nesw-resize;
+}
+
+.h_se {
+    top: 100%;
+    left: 100%;
+    cursor: nwse-resize;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hint {
+    opacity: .85;
+    font-size: 13px;
+}
+
+.ratioRow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:-4px 0 2px;
+}
+
+.presetBtn{
+    appearance:none; border:0; cursor:pointer;
+    border-radius:12px;
+    padding:8px 12px;
+    font-weight:800;
+    letter-spacing:.2px;
+    color:#fff;
+    background: rgba(255,255,255,.10);
+    box-shadow: 0 10px 22px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.14) inset;
+    transition: transform .12s ease, filter .2s ease, opacity .2s ease;
+}
+.presetBtn:hover{ filter:saturate(115%); transform:translateY(-1px); }
+
+.presetBtnActive{
+    background: linear-gradient(90deg, #b98bff, #6a00ff 60%, #ff61e7 100%);
+    box-shadow:
+            0 0 20px rgba(122,41,255,.45),
+            0 10px 24px rgba(0,0,0,.35),
+            0 0 0 1px rgba(255,255,255,.16) inset;
+}
+
+
+.shapeRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 10px;
+    font-size: 13px;
+    opacity: .95;
+}
+
+.shapeLabel {
+    opacity: .8;
+}
+
+.shapeBtn {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    color: #fff;
+    background: rgba(255, 255, 255, .08);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .25),
+    0 0 0 1px rgba(255, 255, 255, .12) inset;
+    transition: transform .12s ease, filter .2s ease, opacity .2s ease;
+    font-size: 12px;
+}
+
+.shapeBtn:hover {
+    filter: saturate(115%);
+    transform: translateY(-1px);
+}
+
+.shapeBtnActive {
+    background: linear-gradient(90deg, #b98bff, #6a00ff 60%, #ff61e7 100%);
+    box-shadow:
+            0 0 16px rgba(122, 41, 255, .45),
+            0 8px 20px rgba(0, 0, 0, .35),
+            0 0 0 1px rgba(255, 255, 255, .16) inset;
+}
+
+/* круглая рамка */
+.cropCircle {
+    border-radius: 999px;
+}
