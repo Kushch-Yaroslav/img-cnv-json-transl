@@ -13,9 +13,9 @@ export function useConvert<
     const busy = ref(false)
     const status = ref('')
 
-    async function convert() {
+    async function convert(): Promise<boolean> {
         try {
-            if (!files.value.length) return
+            if (!files.value.length) return false
             busy.value = true
             status.value = 'Обработка...'
 
@@ -60,9 +60,11 @@ export function useConvert<
             downloadBlob(blob, 'converted_images.zip')
 
             status.value = 'Готово ✔'
+            return true
         } catch (e) {
             console.error(e)
             status.value = 'Ошибка :('
+            return false
         } finally {
             busy.value = false
         }

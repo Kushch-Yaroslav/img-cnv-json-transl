@@ -76,6 +76,11 @@
     border: 1px solid rgba(255, 255, 255, .28);
 }
 
+.badgeWarn {
+    background: linear-gradient(90deg, rgba(255, 113, 113, .96), rgba(255, 189, 99, .96));
+    box-shadow: 0 8px 24px rgba(255, 113, 113, .36), 0 0 0 1px rgba(255, 255, 255, .25) inset;
+}
+
 /* двуколоночка */
 .grid {
     display: grid;
