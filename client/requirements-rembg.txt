@@ -1,0 +1,30 @@
+# --- GPU базис ---
+numpy==1.26.4
+onnxruntime-gpu==1.18.1
+
+# --- heavy deps, совместимые с numpy<2 ---
+opencv-python-headless==4.10.0.84
+scipy==1.11.4
+scikit-image==0.22.0
+pillow==10.4.0
+imageio==2.37.0
+pymatting==1.1.14
+
+# --- мелкие deps rembg CLI ---
+filetype==1.2.0
+watchdog==4.0.2
+click==8.1.7
+tqdm==4.67.1
+coloredlogs==15.0.1
+humanfriendly==10.0
+
+# --- сам rembg ---
+rembg==2.0.67
+
+
+# --- модель для перевода ---
+nllb-3.3B
+
+# --- окружение ---
+# .venv-rembg
+# .venv-translate

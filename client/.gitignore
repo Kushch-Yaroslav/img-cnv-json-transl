@@ -1,0 +1,36 @@
+# dependencies
+node_modules/
+**/node_modules/
+
+# build
+dist/
+build/
+client/dist/
+
+# env
+.env
+.env.*
+!.env.example
+
+# python
+.venv/
+.venv*/
+**/.venv*/
+__pycache__/
+*.pyc
+
+# ide
+.idea/
+.vscode/
+
+# logs
+*.log
+err.txt
+
+# ai models / binaries
+server/src/Waifu2x/
+server/src/realesrgan/
+*.bin
+*.param
+waifu2x-ncnn-vulkan
+realesrgan-ncnn-vulkan
