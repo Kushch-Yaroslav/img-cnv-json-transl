@@ -169,6 +169,25 @@
     transform: translateY(-1px)
 }
 
+.btnGhost:disabled,
+.btnSmall:disabled,
+.presetBtn:disabled,
+.modeOption:disabled,
+.checkbox input[type="checkbox"]:disabled,
+.input:disabled {
+    cursor: not-allowed;
+    opacity: .58;
+    transform: none;
+}
+
+.btnGhost:disabled:hover,
+.btnSmall:disabled:hover,
+.presetBtn:disabled:hover,
+.modeOption:disabled:hover {
+    filter: none;
+    transform: none;
+}
+
 .btnSmall {
     padding: 8px 10px
 }
@@ -296,6 +315,11 @@
     height: 0;
 }
 
+.switch:has(input:disabled) {
+    cursor: not-allowed;
+    opacity: .58;
+}
+
 .slider {
     position: absolute;
     inset: 0;
@@ -338,6 +362,15 @@
     flex-wrap: wrap;
 }
 
+.disabledRow {
+    opacity: .72;
+}
+
+.disabledRow .checkbox,
+.disabledRow .switch,
+.disabledRow button {
+    cursor: not-allowed;
+}
 
 @media (max-width: 520px) {
     .grid2 {

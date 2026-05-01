@@ -62,6 +62,107 @@
     opacity: .95;
 }
 
+.featuredLink {
+    display: block;
+    max-width: 1200px;
+    margin: 22px auto 4px;
+    padding: 0 20px;
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+}
+
+.featuredBox {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 22px;
+    min-height: 170px;
+    padding: 28px;
+    border-radius: 18px;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+            linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.08)),
+            radial-gradient(32rem 18rem at 12% 20%, rgba(255,214,99,.22), transparent 62%),
+            radial-gradient(30rem 18rem at 88% 0%, rgba(255,97,231,.22), transparent 64%);
+    border: 1px solid rgba(255,255,255,.24);
+    box-shadow: 0 22px 70px rgba(0,0,0,.42), 0 0 0 1px rgba(255,255,255,.08) inset;
+}
+
+.featuredGlow {
+    position: absolute;
+    inset: -30%;
+    background: conic-gradient(from 210deg, rgba(255,255,255,.18), rgba(255,255,255,0), rgba(255,214,99,.2), rgba(255,255,255,0));
+    opacity: .52;
+    pointer-events: none;
+}
+
+.featuredIcon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    font-size: 34px;
+    background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.1));
+    border: 1px solid rgba(255,255,255,.24);
+    box-shadow: 0 14px 34px rgba(0,0,0,.28);
+}
+
+.featuredCopy {
+    position: relative;
+    min-width: 0;
+}
+
+.featuredKicker {
+    font-size: 13px;
+    font-weight: 900;
+    color: #ffe38a;
+    text-transform: uppercase;
+}
+
+.featuredTitle {
+    margin: 5px 0 8px;
+    font-size: 34px;
+    line-height: 1.05;
+    font-weight: 900;
+}
+
+.featuredDesc {
+    margin: 0;
+    max-width: 700px;
+    color: #f5f0ff;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+.featuredBadge {
+    position: relative;
+    justify-self: end;
+    max-width: 220px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 900;
+    color: #20103a;
+    background: linear-gradient(90deg, #fff5b8, #ffd663);
+    box-shadow: 0 12px 30px rgba(255,214,99,.28);
+}
+
+.featuredLink:focus-visible .featuredBox {
+    outline: 2px solid rgba(255, 230, 142, .95);
+    outline-offset: 3px;
+}
+
+.featuredLink:hover .featuredBox {
+    filter: saturate(112%);
+    box-shadow: 0 28px 82px rgba(0,0,0,.48), 0 0 0 1px rgba(255,255,255,.1) inset;
+}
+
 /* Grid */
 .grid {
     display: grid;
@@ -115,6 +216,32 @@
 .cardLink:hover .cardBox {
     box-shadow: 0 22px 60px rgba(0, 0, 0, .45), 0 0 0 1px rgba(255, 255, 255, .06) inset;
     filter: saturate(115%);
+}
+
+.cardDisabled {
+    cursor: default;
+    opacity: .68;
+}
+
+.cardDisabled .cardMover {
+    cursor: default;
+}
+
+.cardDisabled .cardBox {
+    filter: grayscale(.25) saturate(.82);
+}
+
+.cardDisabled:hover .cardBox {
+    box-shadow: 0 16px 48px rgba(0, 0, 0, .35), 0 0 0 1px rgba(255, 255, 255, .04) inset;
+}
+
+.cardDisabled:hover .cardInner {
+    transform: perspective(900px) rotateX(0deg) rotateY(0deg) scale(1);
+}
+
+.cardDisabled .cardBadge {
+    background: linear-gradient(90deg, rgba(255, 214, 99, .95), rgba(255, 245, 184, .95));
+    color: #2a1742;
 }
 
 /* Focus ring */
@@ -320,6 +447,21 @@
 /*:global(.flipAnim) {}*/
 
 @media (max-width: 480px) {
+    .featuredBox {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 22px;
+    }
+
+    .featuredBadge {
+        justify-self: start;
+        max-width: none;
+    }
+
+    .featuredTitle {
+        font-size: 27px;
+    }
+
     .cardInner {
         min-height: 170px;
         padding: 20px 18px;
