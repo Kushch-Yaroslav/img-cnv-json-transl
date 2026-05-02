@@ -2,9 +2,9 @@
   <form :class="s.panel" @submit.prevent>
     <!-- Формат -->
     <div v-if="showFormatSection" :class="s.row">
-      <label :class="s.label">Формат вывода</label>
+      <label :class="s.label">{{ $t('convert.options.outputFormat.label') }}</label>
       <select v-model="model.outputFormat" :class="s.select">
-        <option value="same">Сохранить как есть</option>
+        <option value="same">{{ $t('convert.options.outputFormat.same') }}</option>
         <option value="webp">WebP</option>
         <option value="jpeg">JPEG</option>
         <option value="png">PNG</option>
@@ -15,14 +15,14 @@
     <!-- Изменить размер -->
     <div v-if="showResizeSection" :class="s.row">
       <label :class="s.checkbox">
-        <input type="checkbox" v-model="model.resize"> Изменить размер
+        <input type="checkbox" v-model="model.resize"> {{ $t('convert.options.resize.toggle') }}
       </label>
       <div :class="s.grid2">
-        <label :class="s.inline">Max width
-          <input type="number" :class="s.input" v-model.number="model.maxWidth" :disabled="!model.resize" placeholder="напр. 1600">
+        <label :class="s.inline">{{ $t('convert.options.resize.maxWidth') }}
+          <input type="number" :class="s.input" v-model.number="model.maxWidth" :disabled="!model.resize" :placeholder="$t('convert.options.resize.maxWidthPlaceholder')">
         </label>
-        <label :class="s.inline">Max height
-          <input type="number" :class="s.input" v-model.number="model.maxHeight" :disabled="!model.resize" placeholder="опционально">
+        <label :class="s.inline">{{ $t('convert.options.resize.maxHeight') }}
+          <input type="number" :class="s.input" v-model.number="model.maxHeight" :disabled="!model.resize" :placeholder="$t('common.placeholders.optional')">
         </label>
       </div>
     </div>
@@ -31,21 +31,21 @@
     <!-- Мульти-размеры -->
     <div v-if="showMultiResizeSection" :class="[s.row, multiResizeDisabled && s.disabledRow]">
       <label :class="s.checkbox">
-        <input type="checkbox" v-model="model.multiResize" :disabled="multiResizeDisabled"> Мульти-размеры
+        <input type="checkbox" v-model="model.multiResize" :disabled="multiResizeDisabled"> {{ $t('convert.options.multiResize.toggle') }}
       </label>
 
       <div v-if="model.multiResize" :class="s.variants">
         <div :class="s.actionsRow">
-          <button type="button" :class="s.btnGhost" :disabled="multiResizeDisabled" @click="addVariant()">+ Добавить размер</button>
-          <button type="button" :class="s.btnGhost" :disabled="multiResizeDisabled" @click="resetAll()">Сбросить всё</button>
-          <button type="button" :class="s.btnGhost" :disabled="multiResizeDisabled" @click="sortAll()">Сортировать</button>
+          <button type="button" :class="s.btnGhost" :disabled="multiResizeDisabled" @click="addVariant()">{{ $t('convert.options.multiResize.addVariant') }}</button>
+          <button type="button" :class="s.btnGhost" :disabled="multiResizeDisabled" @click="resetAll()">{{ $t('common.actions.resetAll') }}</button>
+          <button type="button" :class="s.btnGhost" :disabled="multiResizeDisabled" @click="sortAll()">{{ $t('common.actions.sort') }}</button>
         </div>
 
         <div :class="s.presetArea">
           <!-- левая колонка: режим -->
           <div :class="s.modeCol">
             <div :class="s.inline">
-              <strong>Режим наборов</strong>
+              <strong>{{ $t('convert.options.multiResize.modeLabel') }}</strong>
               <div :class="s.modeToggle">
                 <button
                     type="button"
@@ -53,9 +53,9 @@
                     :aria-pressed="model.multiMode === 'switch'"
                     :disabled="multiResizeDisabled"
                     @click="setMode('switch')"
-                >Переключать</button>
+                >{{ $t('convert.options.multiResize.mode.switch') }}</button>
 
-                <label :class="s.switch" :title="model.multiMode === 'add' ? 'Добавлять' : 'Переключать'">
+                <label :class="s.switch" :title="model.multiMode === 'add' ? $t('convert.options.multiResize.mode.add') : $t('convert.options.multiResize.mode.switch')">
                   <input type="checkbox" :checked="model.multiMode === 'add'" :disabled="multiResizeDisabled" @change="onToggleMode" />
                   <span :class="s.slider"></span>
                 </label>
@@ -66,7 +66,7 @@
                     :aria-pressed="model.multiMode === 'add'"
                     :disabled="multiResizeDisabled"
                     @click="setMode('add')"
-                >Добавлять</button>
+                >{{ $t('convert.options.multiResize.mode.add') }}</button>
               </div>
             </div>
           </div>
@@ -74,11 +74,11 @@
           <!-- правая колонка: сетка пресетов -->
           <div :class="s.buttonsCol">
             <div :class="s.presetGrid">
-              <button type="button" :class="[s.presetBtn, isSetActive('desktop') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('desktop')">Десктопы</button>
-              <button type="button" :class="[s.presetBtn, isSetActive('tablet') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('tablet')">Планшеты</button>
-              <button type="button" :class="[s.presetBtn, isSetActive('phone') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('phone')">Телефоны</button>
-              <button type="button" :class="[s.presetBtn, isSetActive('all') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('all')">Все сразу</button>
-              <button type="button" :class="[s.presetBtn, isSetActive('macro1') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('macro1')">Макрос 1</button>
+              <button type="button" :class="[s.presetBtn, isSetActive('desktop') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('desktop')">{{ $t('convert.options.multiResize.presets.desktop') }}</button>
+              <button type="button" :class="[s.presetBtn, isSetActive('tablet') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('tablet')">{{ $t('convert.options.multiResize.presets.tablet') }}</button>
+              <button type="button" :class="[s.presetBtn, isSetActive('phone') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('phone')">{{ $t('convert.options.multiResize.presets.phone') }}</button>
+              <button type="button" :class="[s.presetBtn, isSetActive('all') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('all')">{{ $t('convert.options.multiResize.presets.all') }}</button>
+              <button type="button" :class="[s.presetBtn, isSetActive('macro1') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('macro1')">{{ $t('convert.options.multiResize.presets.macro1') }}</button>
             </div>
           </div>
         </div>
@@ -86,17 +86,17 @@
 
         <!-- текущие размеры -->
         <div v-for="v in model.variants" :key="v._k" :class="s.grid3">
-          <label :class="s.inline">W
-            <input type="number" min="1" :class="s.input" v-model.number="v.w" :disabled="multiResizeDisabled" placeholder="напр. 1080">
+          <label :class="s.inline">{{ $t('convert.options.multiResize.variantWidth') }}
+            <input type="number" min="1" :class="s.input" v-model.number="v.w" :disabled="multiResizeDisabled" :placeholder="$t('convert.options.multiResize.variantWidthPlaceholder')">
           </label>
-          <label :class="s.inline">H
-            <input type="number" min="1" :class="s.input" v-model.number="v.h" :disabled="multiResizeDisabled" placeholder="опц.">
+          <label :class="s.inline">{{ $t('convert.options.multiResize.variantHeight') }}
+            <input type="number" min="1" :class="s.input" v-model.number="v.h" :disabled="multiResizeDisabled" :placeholder="$t('common.placeholders.optionalShort')">
           </label>
-          <button type="button" :class="s.btnSmall" :disabled="multiResizeDisabled" @click="removeByKey(v._k!)">Удалить</button>
+          <button type="button" :class="s.btnSmall" :disabled="multiResizeDisabled" @click="removeByKey(v._k!)">{{ $t('common.actions.remove') }}</button>
         </div>
 
 
-        <p :class="s.muted">Если указать только ширину — высота подберётся пропорционально (fit: inside).</p>
+        <p :class="s.muted">{{ $t('convert.options.multiResize.hint') }}</p>
       </div>
     </div>
 
@@ -107,30 +107,30 @@
             :checked="model.inFolders"
             @change="onInFoldersChange"
         >
-        Сохранять в папках
+        {{ $t('convert.options.export.inFolders') }}
       </label>
     </div>
 
 
     <!-- Остальные опции -->
     <div v-if="showLosslessSection" :class="s.row">
-      <label :class="s.checkbox"><input type="checkbox" v-model="model.lossless"> Lossless (без потерь)</label>
+      <label :class="s.checkbox"><input type="checkbox" v-model="model.lossless"> {{ $t('convert.options.compression.lossless') }}</label>
     </div>
 
     <div v-if="showQualitySection" :class="s.row">
-      <label :class="s.label">Качество (для lossy): <span :class="s.kv">{{ model.quality }}</span></label>
+      <label :class="s.label">{{ $t('convert.options.compression.quality') }} <span :class="s.kv">{{ model.quality }}</span></label>
       <input type="range" min="30" max="100" v-model.number="model.quality" :class="s.range">
     </div>
 
     <div v-if="showTargetSizeSection" :class="s.row">
-      <label :class="s.checkbox"><input type="checkbox" v-model="model.useTarget"> Целевой вес (KB)</label>
-      <input type="number" :class="s.input" v-model.number="model.targetKb" :disabled="!model.useTarget" min="10" step="10" placeholder="например 180">
+      <label :class="s.checkbox"><input type="checkbox" v-model="model.useTarget"> {{ $t('convert.options.compression.targetWeight') }}</label>
+      <input type="number" :class="s.input" v-model.number="model.targetKb" :disabled="!model.useTarget" min="10" step="10" :placeholder="$t('convert.options.compression.targetWeightPlaceholder')">
     </div>
 
     <div v-if="showOptimizeSection" :class="s.row">
-      <label :class="s.checkbox"><input type="checkbox" v-model="model.stripMetadata"> Удалить EXIF/метаданные</label>
-      <label :class="s.checkbox"><input type="checkbox" v-model="model.minSize"> minSize</label>
-      <label :class="s.checkbox"><input type="checkbox" v-model="model.smartSubsample"> smartSubsample</label>
+      <label :class="s.checkbox"><input type="checkbox" v-model="model.stripMetadata"> {{ $t('convert.options.optimize.stripMetadata') }}</label>
+      <label :class="s.checkbox"><input type="checkbox" v-model="model.minSize"> {{ $t('convert.options.optimize.minSize') }}</label>
+      <label :class="s.checkbox"><input type="checkbox" v-model="model.smartSubsample"> {{ $t('convert.options.optimize.smartSubsample') }}</label>
     </div>
 
     <slot />

@@ -2,9 +2,9 @@
   <section :class="[s.wrap, ready && s.ready]">
     <div :class="s.container">
       <header :class="s.header">
-        <h1 :class="s.title">{{ modeCopy.titleStart }} <span :class="s.accent">{{ modeCopy.titleAccent }}</span></h1>
+        <h1 :class="s.title">{{ $t(`convert.mode.${modeKey}.titleStart`) }} <span :class="s.accent">{{ $t(`convert.mode.${modeKey}.titleAccent`) }}</span></h1>
         <p :class="s.subtitle">
-          {{ modeCopy.subtitle }}
+          {{ $t(`convert.mode.${modeKey}.subtitle`) }}
         </p>
       </header>
 
@@ -13,10 +13,10 @@
       </div>
 
       <div v-if="files.length || showSourceCounter" :class="s.stats">
-        <div v-if="files.length" :class="s.badge">Файлов: <strong>{{ files.length }}</strong></div>
-        <div v-if="files.length" :class="s.badge">Суммарно: <strong>{{ totalSize }}</strong></div>
+        <div v-if="files.length" :class="s.badge">{{ $t('convert.stats.files') }} <strong>{{ files.length }}</strong></div>
+        <div v-if="files.length" :class="s.badge">{{ $t('convert.stats.totalSize') }} <strong>{{ totalSize }}</strong></div>
         <div v-if="showSourceCounter" :class="[s.badge, sourceLimitExceeded && s.badgeWarn]">
-          Source images: <strong>{{ sourceCounterText }}</strong>
+          {{ $t('convert.stats.sourceImages') }} <strong>{{ sourceCounterText }}</strong>
         </div>
       </div>
 
@@ -45,7 +45,7 @@
                   :disabled="busy || !files.length"
                   @click="runConvert"
               >
-                {{ busy ? 'Конвертирую…' : 'Конвертировать' }}
+                {{ busy ? $t('convert.actions.processing') : $t('convert.actions.submit') }}
               </button>
               <button
                   type="button"
@@ -53,7 +53,7 @@
                   :disabled="!files.length || busy"
                   @click="clearFiles"
               >
-                Очистить файлы
+                {{ $t('common.actions.clearFiles') }}
               </button>
               <span :class="[s.muted, s.status]">{{ status }}</span>
             </div>
@@ -69,6 +69,7 @@ import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import DropZone from '@/Shared/Components/DropZone.vue'
 
+import { useI18n } from 'vue-i18n'
 import {UFile, useFiles} from '@/Pages/ConvertPage/Composables/useFiles'
 import { useOptions } from '@/Pages/ConvertPage/Composables/useOptions'
 import { useConvert } from '@/Pages/ConvertPage/Composables/useConvert'
@@ -83,6 +84,21 @@ import {
   APP_MODE_PREVIEW_CHANGE_EVENT,
   getEffectiveAppMode,
 } from '@/shared/config/appModePreview'
+
+const { t } = useI18n()
+
+const modeKeyMap: Record<string, string> = {
+  'all-in-one': 'allInOne',
+  'compress': 'compress',
+  'resize': 'resize',
+  'format': 'format',
+  'crop': 'crop'
+}
+
+const modeKey = computed(() => {
+  const mode = optimizerMode.value
+  return modeKeyMap[mode] || mode
+})
 
 const ready = ref(false)
 const route = useRoute()
@@ -103,35 +119,6 @@ const optimizerMode = computed<OptimizerMode>(() => {
       ? mode as OptimizerMode
       : 'all-in-one'
 })
-
-const modeCopyMap: Record<OptimizerMode, { titleStart: string; titleAccent: string; subtitle: string }> = {
-  'all-in-one': {
-    titleStart: 'All-in-One',
-    titleAccent: 'Image Optimizer',
-    subtitle: 'Convert, compress, resize, crop and export in one workflow',
-  },
-  compress: {
-    titleStart: 'Compress',
-    titleAccent: 'Images',
-    subtitle: 'Reduce file size for faster web pages',
-  },
-  resize: {
-    titleStart: 'Resize',
-    titleAccent: 'Images',
-    subtitle: 'Prepare exact sizes for web and marketplaces',
-  },
-  format: {
-    titleStart: 'Convert',
-    titleAccent: 'Format',
-    subtitle: 'Switch between JPEG, PNG, WebP and AVIF',
-  },
-  crop: {
-    titleStart: 'Crop',
-    titleAccent: 'Images',
-    subtitle: 'Frame product images and thumbnails',
-  },
-}
-const modeCopy = computed(() => modeCopyMap[optimizerMode.value])
 
 const { items, files, onPicked, clearFiles, totalSize,
   removeById, replaceById, restoreById } = useFiles()
@@ -179,7 +166,7 @@ const sourceCounterText = computed(() => {
 
 async function runConvert() {
   if (sourceLimitExceeded.value) {
-    status.value = `Free limit: ${sourceImagesLimit.value} source images`
+    status.value = t('convert.limits.freeLimitExceeded', { count: sourceImagesLimit.value })
     return
   }
   const pending = pendingSourceImagesCount.value

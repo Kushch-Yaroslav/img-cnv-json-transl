@@ -1,0 +1,308 @@
+{
+  "appMode": {
+    "local": { "label": "Lokal" },
+    "development": { "label": "Entwicklung", "short": "Dev" },
+    "free": { "label": "Kostenlos" },
+    "pro": { "label": "Pro" }
+  },
+  "common": {
+    "actions": {
+      "save": "Speichern",
+      "remove": "Entfernen",
+      "reset": "Zurücksetzen",
+      "resetAll": "Alles zurücksetzen",
+      "clearFiles": "Dateien löschen",
+      "selectFile": "Datei auswählen",
+      "sort": "Sortieren"
+    },
+    "badges": {
+      "simple": "Einfach",
+      "soon": "Bald",
+      "comingSoon": "Demnächst verfügbar",
+      "comingSoonShort": "Bald"
+    },
+    "status": {
+      "processing": "Wird verarbeitet...",
+      "processingLower": "wird verarbeitet...",
+      "success": "Fertig",
+      "ready": "bereit",
+      "errorGeneric": "Fehler",
+      "errorPrefix": "Fehler: ",
+      "errorPostfix": " :("
+    },
+    "errors": {
+      "unknown": "unbekannt"
+    },
+    "placeholders": {
+      "optional": "optional",
+      "optionalShort": "opt."
+    }
+  },
+  "header": {
+    "logo": { "ariaLabel": "Image Tools Startseite" },
+    "nav": {
+      "home": "Startseite",
+      "allInOne": "All-in-One",
+      "removeBg": "Hintergrund entfernen",
+      "upscale": "Verbessern",
+      "translate": "Übersetzen"
+    },
+    "profile": { "ariaLabel": "Profil" }
+  },
+  "home": {
+    "hero": { "subtitle": "Lokale Bildoptimierung für Onlineshops, Marktplätze und E-Commerce-Inhalte." },
+    "featured": { "kicker": "Erweiterter Workflow" },
+    "footer": { "caption": "Erstellt mit ❤️ in Vue 3" }
+  },
+  "tools": {
+    "allInOne": {
+      "title": "All-in-One-Bildoptimierer",
+      "description": "Konvertieren, komprimieren, skalieren, zuschneiden und exportieren in einem Workflow",
+      "badge": "Kostenlos bis zu 5 Bilder / Pro unbegrenzt"
+    },
+    "compress": {
+      "title": "Bilder komprimieren",
+      "description": "Reduziere die Bildgröße für schnellere Produktseiten"
+    },
+    "resize": {
+      "title": "Bilder skalieren",
+      "description": "Bereite exakte Größen für Websites und Marktplätze vor"
+    },
+    "format": {
+      "title": "Format konvertieren",
+      "description": "Wechsle zwischen WebP, JPEG, PNG und AVIF"
+    },
+    "crop": {
+      "title": "Bilder zuschneiden",
+      "description": "Rahme Produktbilder und Vorschaubilder passend ein"
+    },
+    "removeBg": {
+      "title": "Hintergrund entfernen",
+      "description": "AI-Hintergrundentfernung für Produktbilder"
+    },
+    "upscale": {
+      "title": "Bild verbessern",
+      "description": "Erhöhe Auflösung und Schärfe"
+    },
+    "translate": {
+      "title": "Übersetzen",
+      "description": "Workflow für JSON-Lokalisierung"
+    }
+  },
+  "dropzone": {
+    "title": "Dateien hier ablegen",
+    "subtitle": "...oder klicken, um auszuwählen"
+  },
+  "dock": {
+    "dropZone": { "label": "Ziehe eine Karte hierher" }
+  },
+  "convert": {
+    "mode": {
+      "allInOne": { "titleStart": "All-in-One", "titleAccent": "Bildoptimierer", "subtitle": "Konvertieren, komprimieren, skalieren, zuschneiden und exportieren in einem Workflow" },
+      "compress": { "titleStart": "Bilder", "titleAccent": "komprimieren", "subtitle": "Reduziere die Dateigröße für schnellere Webseiten" },
+      "resize": { "titleStart": "Bilder", "titleAccent": "skalieren", "subtitle": "Bereite exakte Größen für Websites und Marktplätze vor" },
+      "format": { "titleStart": "Format", "titleAccent": "konvertieren", "subtitle": "Wechsle zwischen JPEG, PNG, WebP und AVIF" },
+      "crop": { "titleStart": "Bilder", "titleAccent": "zuschneiden", "subtitle": "Rahme Produktbilder und Vorschaubilder passend ein" }
+    },
+    "stats": {
+      "files": "Dateien:",
+      "totalSize": "Gesamtgröße:",
+      "sourceImages": "Quellbilder:"
+    },
+    "actions": {
+      "submit": "Konvertieren",
+      "processing": "Konvertierung..."
+    },
+    "limits": {
+      "freeLimitExceeded": "Limit im kostenlosen Modus: {count} Quellbilder"
+    },
+    "options": {
+      "outputFormat": {
+        "label": "Ausgabeformat",
+        "same": "Unverändert lassen"
+      },
+      "resize": {
+        "toggle": "Größe ändern",
+        "maxWidth": "Max. Breite",
+        "maxWidthPlaceholder": "z. B. 1600",
+        "maxHeight": "Max. Höhe"
+      },
+      "multiResize": {
+        "toggle": "Mehrere Größen",
+        "addVariant": "+ Größe hinzufügen",
+        "modeLabel": "Set-Modus",
+        "mode": {
+          "switch": "Wechseln",
+          "add": "Hinzufügen"
+        },
+        "presets": {
+          "desktop": "Desktop",
+          "tablet": "Tablet",
+          "phone": "Smartphones",
+          "all": "Alle auf einmal",
+          "macro1": "Makro 1"
+        },
+        "variantWidth": "B",
+        "variantWidthPlaceholder": "z. B. 1080",
+        "variantHeight": "H",
+        "hint": "Wenn du nur die Breite angibst, wird die Höhe proportional berechnet (fit: inside)."
+      },
+      "export": {
+        "inFolders": "In Ordnern speichern"
+      },
+      "compression": {
+        "lossless": "Verlustfrei",
+        "quality": "Qualität (für verlustbehaftete Komprimierung):",
+        "targetWeight": "Zielgröße (KB)",
+        "targetWeightPlaceholder": "z. B. 180"
+      },
+      "optimize": {
+        "stripMetadata": "EXIF/Metadaten entfernen",
+        "minSize": "minSize",
+        "smartSubsample": "smartSubsample"
+      }
+    }
+  },
+  "cropModal": {
+    "actions": {
+      "resetArea": "Bereich zurücksetzen",
+      "restoreOriginal": "Original wiederherstellen"
+    },
+    "shape": {
+      "label": "Form:",
+      "rectangle": "Rechteck",
+      "circle": "Kreis"
+    },
+    "ratio": {
+      "free": "Frei"
+    },
+    "hint": "Ziehe den Rahmen oder die Ecken. Der Bereich bleibt immer innerhalb des Bildes."
+  },
+  "previewGrid": {
+    "remove": { "title": "Entfernen" },
+    "badges": {
+      "cropped": "Zugeschnitten",
+      "original": "Original"
+    }
+  },
+  "removeBg": {
+    "title": {
+      "start": "Hintergrund",
+      "accent": "entfernen"
+    },
+    "subtitle": "AI-Hintergrundentfernung mit Vorschau. Modell und Sitzung — automatisch.",
+    "stats": {
+      "files": "Dateien:",
+      "totalSize": "Gesamtgröße:"
+    },
+    "preview": { "title": "Vorschau" },
+    "options": {
+      "outputFormat": "Ausgabeformat",
+      "outputFormatPng": "PNG (Transparenz)",
+      "outputFormatWebp": "WEBP",
+      "outputFormatJpeg": "JPEG (ohne Transparenz)",
+      "outputFormatAvif": "AVIF",
+      "backgroundColor": "Hintergrundfarbe (für JPEG / optional)"
+    },
+    "compare": {
+      "original": "Original",
+      "result": "Ohne Hintergrund",
+      "largeTitle": "Vergleich 1000×1000 — {name}"
+    },
+    "actions": {
+      "submit": "Hintergrund entfernen (ZIP)"
+    },
+    "errors": {
+      "batchFailedFallback": "Fehler beim Entfernen des Hintergrunds",
+      "previewFailedFallback": "Fehler bei der Vorschau",
+      "previewGeneric": "Fehler bei der Vorschau"
+    }
+  },
+  "upscale": {
+    "title": {
+      "start": "Bild",
+      "accent": "verbessern"
+    },
+    "subtitle": "Bilder vergrößern und verbessern. Unterstützt: schneller \"Nicht-AI\"-Modus, Real-ESRGAN und Waifu2x.",
+    "stats": {
+      "files": "Dateien:",
+      "totalSize": "Gesamtgröße:"
+    },
+    "preview": { "title": "Vorschau" },
+    "options": {
+      "method": "Methode",
+      "methodNonAi": "Nicht-AI (schnell)",
+      "methodRealEsrgan": "Real-ESRGAN (AI)",
+      "methodWaifu2x": "Waifu2x (AI, art/anime)",
+      "targetSize": "Zielgröße (max. Seite)",
+      "targetSizePlaceholder": "z. B. 1600",
+      "model": "Modell",
+      "modelX4plus": "x4plus (Foto)",
+      "modelX4plusAnime": "x4plus-anime",
+      "noiseReduction": "Rauschreduzierung"
+    },
+    "hints": {
+      "gpuAcceleration": "GPU-Beschleunigung",
+      "artManga": "Geeignet für art/manga"
+    },
+    "compare": {
+      "original": "Original",
+      "result": "Verbessert"
+    },
+    "actions": {
+      "submit": "Verbessern (ZIP)"
+    },
+    "errors": {
+      "batchFailedFallback": "Fehler bei der Verbesserung",
+      "previewFailedFallback": "Fehler bei der Vorschau",
+      "previewGeneric": "Fehler bei der Vorschau"
+    }
+  },
+  "jsonTranslate": {
+    "title": "JSON Translate",
+    "models": {
+      "small": { "description": "leicht" },
+      "medium": { "description": "ausgewogen" },
+      "active": { "description": "aktuell" }
+    },
+    "file": {
+      "label": "JSON-Datei",
+      "empty": "Keine Datei ausgewählt"
+    },
+    "languages": {
+      "source": "Ausgangssprache (leer = auto)",
+      "sourcePlaceholder": "it / ru / en ...",
+      "target": "Zielsprache",
+      "targetPlaceholder": "en"
+    },
+    "actions": {
+      "submit": "Übersetzen (ZIP)",
+      "hidePreview": "JSON ausblenden",
+      "showPreview": "JSON anzeigen"
+    },
+    "preview": {
+      "sourceTitle": "Quell-JSON",
+      "readOnly": "schreibgeschützt",
+      "resultTitle": "Übersetzung",
+      "invalidJsonFallback": "{ /* Ergebnis konnte nicht als JSON angezeigt werden */ }"
+    },
+    "status": {
+      "processing": "Übersetzung..."
+    }
+  },
+  "pipeline": {
+    "title": "Pipeline 1080×1080 → RemoveBG → WebP(85)",
+    "stats": {
+      "files": "Dateien: "
+    },
+    "actions": {
+      "submit": "Pipeline ausführen (ZIP)"
+    },
+    "description": {
+      "steps": "Schritte: Größe auf 1080×1080 ändern (fit: inside, kein Upscale) → Hintergrund entfernen (AI) → WebP (Qualität 85, minSize, smartSubsample) → Metadaten entfernen."
+    },
+    "errors": {
+      "batchFailedFallback": "Pipeline-Fehler"
+    }
+  }
+}

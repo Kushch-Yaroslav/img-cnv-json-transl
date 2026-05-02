@@ -2,7 +2,7 @@
   <div v-if="items.length" :class="s.grid">
     <div :class="[s.item, it.cropped && s.itemCropped]" v-for="it in items" :key="it.id">
       <div :class="s.thumbWrap" @click="$emit('edit', it.id)">
-        <button type="button" :class="s.closeBtn" title="Удалить" @click.stop="$emit('remove', it.id)">×</button>
+        <button type="button" :class="s.closeBtn" :title="$t('previewGrid.remove.title')" @click.stop="$emit('remove', it.id)">×</button>
         <img :src="urls.get(it.current)!" :alt="it.current.name" :class="s.thumb" />
         <div :class="s.thumbGlow" aria-hidden="true"></div>
       </div>
@@ -10,7 +10,7 @@
         <div :class="s.name" :title="it.current.name">{{ it.current.name }}</div>
         <div :class="s.row">
           <span :class="s.size">{{ fmtBytes(it.current.size) }}</span>
-          <span :class="[s.badge, it.cropped && s.badgeOn]">{{ it.cropped ? 'Обрезано' : 'Оригинал' }}</span>
+          <span :class="[s.badge, it.cropped && s.badgeOn]">{{ it.cropped ? $t('previewGrid.badges.cropped') : $t('previewGrid.badges.original') }}</span>
         </div>
       </div>
     </div>

@@ -5,9 +5,9 @@
         <header :class="s.header">
           <h3 :class="s.title">{{ file?.name }}</h3>
           <div :class="s.actions">
-            <button :class="s.btnGhost" @click="resetCrop" :disabled="!canReset">Сбросить область</button>
-            <button :class="s.btnGhost" @click="restoreOriginal" :disabled="!canRestore">Восстановить исходник</button>
-            <button :class="s.btnPrimary" @click="saveCrop" :disabled="!file">Сохранить</button>
+            <button :class="s.btnGhost" @click="resetCrop" :disabled="!canReset">{{ $t('cropModal.actions.resetArea') }}</button>
+            <button :class="s.btnGhost" @click="restoreOriginal" :disabled="!canRestore">{{ $t('cropModal.actions.restoreOriginal') }}</button>
+            <button :class="s.btnPrimary" @click="saveCrop" :disabled="!file">{{ $t('common.actions.save') }}</button>
             <button :class="s.btnClose" @click="close">×</button>
           </div>
         </header>
@@ -25,20 +25,20 @@
         </div>
 
         <div :class="s.shapeRow">
-          <span :class="s.shapeLabel">Форма:</span>
+          <span :class="s.shapeLabel">{{ $t('cropModal.shape.label') }}</span>
           <button
               type="button"
               :class="[s.shapeBtn, shape === 'rect' && s.shapeBtnActive]"
               @click="shape = 'rect'"
           >
-            Прямоугольник
+            {{ $t('cropModal.shape.rectangle') }}
           </button>
           <button
               type="button"
               :class="[s.shapeBtn, shape === 'circle' && s.shapeBtnActive]"
               @click="shape = 'circle'"
           >
-            Круг
+            {{ $t('cropModal.shape.circle') }}
           </button>
         </div>
 
@@ -65,7 +65,7 @@
 
 
         <footer :class="s.footer">
-          <div :class="s.hint">Тяни рамку или углы. Область всегда внутри изображения.</div>
+          <div :class="s.hint">{{ $t('cropModal.hint') }}</div>
         </footer>
       </div>
     </div>
@@ -77,8 +77,10 @@
 type Shape = 'rect' | 'circle'
 
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import s from './CropModal.module.css'
 
+const { t } = useI18n()
 const shape = ref<Shape>('rect')
 
 const props = defineProps<{
@@ -91,7 +93,7 @@ type RatioKey = 'free' | '1:1' | '4:3' | '3:2' | '16:9' | '21:9'| '3:4'
 
 const ratio = ref<RatioKey>('free')
 const ratioOptions = [
-  { key: 'free' as RatioKey, label: 'Свободно' },
+  { key: 'free' as RatioKey, label: t('cropModal.ratio.free') },
   { key: '1:1' as RatioKey, label: '1:1' },
   { key: '4:3' as RatioKey, label: '4:3' },
   { key: '3:4' as RatioKey, label: '3:4' },

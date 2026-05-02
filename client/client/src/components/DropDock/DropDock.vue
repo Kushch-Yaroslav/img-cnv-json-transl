@@ -5,7 +5,7 @@
       <div v-for="it in opened" :key="it.path" :class="s.card">
         <header :class="s.cardHead">
           <span :class="s.cardIcon">{{ it.icon }}</span>
-          <strong :class="s.cardTitle">{{ it.title }}</strong>
+          <strong :class="s.cardTitle">{{ $t(it.titleKey) }}</strong>
           <button :class="s.close" @click="remove(it)">✕</button>
         </header>
 
@@ -28,7 +28,7 @@
     <transition name="dock">
       <div v-if="visible" ref="zone" :class="[s.zone, { [s.zoneArmed]: armed }]">
         <div :class="s.zoneGlow" />
-        <div :class="s.zoneLabel">Перетащите сюда карточку</div>
+        <div :class="s.zoneLabel">{{ $t('dock.dropZone.label') }}</div>
       </div>
     </transition>
   </div>
@@ -40,11 +40,11 @@ import s from './DropDock.module.css'
 import type { OptimizerMode } from '@/Pages/Home/config/toolsConfig'
 
 export type DockItem = {
-  title: string
-  desc: string
+  titleKey: string
+  descKey: string
   path: string
   icon: string
-  badge: string
+  badgeKey: string
   optimizerMode?: OptimizerMode
 }
 

@@ -1,4 +1,5 @@
 import { ref, type Ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { downloadBlob } from '@/shared/platform/downloadAdapter'
 import type { ConvertOptions, ResizeVariant } from '@/shared/types/image'
 
@@ -10,6 +11,7 @@ type ConvertDeps<OptionsModel> = {
 export function useConvert<
     OptionsModel extends ConvertOptions = ConvertOptions
 >({ files, opts }: ConvertDeps<OptionsModel>) {
+    const { t } = useI18n()
     const busy = ref(false)
     const status = ref('')
 
@@ -17,7 +19,7 @@ export function useConvert<
         try {
             if (!files.value.length) return false
             busy.value = true
-            status.value = 'Обработка...'
+            status.value = t('common.status.processing')
 
             const fd = new FormData()
             for (const f of files.value) fd.append('files', f)
@@ -59,11 +61,11 @@ export function useConvert<
             const blob = await resp.blob()
             downloadBlob(blob, 'converted_images.zip')
 
-            status.value = 'Готово ✔'
+            status.value = t('common.status.success')
             return true
         } catch (e) {
             console.error(e)
-            status.value = 'Ошибка :('
+            status.value = t('common.status.errorGeneric')
             return false
         } finally {
             busy.value = false

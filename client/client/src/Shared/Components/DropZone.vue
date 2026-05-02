@@ -17,8 +17,8 @@
     />
 
     <div :class="s.icon" aria-hidden="true">⬆</div>
-    <h3 :class="s.title">Перетащи сюда файлы</h3>
-    <p :class="s.subtitle">…или нажми, чтобы выбрать</p>
+    <h3 :class="s.title">{{ $t('dropzone.title') }}</h3>
+    <p :class="s.subtitle">{{ $t('dropzone.subtitle') }}</p>
 
     <div :class="s.hintRow">
       <span class="chip">JPG</span>
@@ -31,8 +31,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import s from './DropZone.module.css'
 
+const { t } = useI18n()
 const hovering = ref(false)
 const fileEl = ref<HTMLInputElement | null>(null)
 

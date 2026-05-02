@@ -8,7 +8,7 @@
         <span :class="s.sparkle" aria-hidden="true">✦</span>
       </div>
       <p :class="s.subtitle">
-        Local image optimization for web stores, marketplaces and e-commerce content.
+        {{ $t('home.hero.subtitle') }}
       </p>
     </header>
 
@@ -22,11 +22,11 @@
           <div :class="s.featuredGlow" aria-hidden="true"></div>
           <div :class="s.featuredIcon">{{ featuredTool.icon }}</div>
           <div :class="s.featuredCopy">
-            <div :class="s.featuredKicker">Advanced workflow</div>
-            <h2 :class="s.featuredTitle">{{ featuredTool.title }}</h2>
-            <p :class="s.featuredDesc">{{ featuredTool.desc }}</p>
+            <div :class="s.featuredKicker">{{ $t('home.featured.kicker') }}</div>
+            <h2 :class="s.featuredTitle">{{ $t(featuredTool.titleKey) }}</h2>
+            <p :class="s.featuredDesc">{{ $t(featuredTool.descKey) }}</p>
           </div>
-          <div :class="s.featuredBadge">{{ featuredTool.badge }}</div>
+          <div :class="s.featuredBadge">{{ $t(featuredTool.badgeKey) }}</div>
         </div>
       </a>
     </RouterLink>
@@ -52,9 +52,9 @@
               <div :class="s.cardShine" aria-hidden="true"></div>
               <div :class="s.cardInner" :ref="(el) => { if (isToolAvailable(item)) setTiltRef(el) }">
                 <div :class="s.cardIcon">{{ item.icon }}</div>
-                <div :class="s.cardTitle">{{ item.title }}</div>
-                <div :class="s.cardDesc">{{ item.desc }}</div>
-                <div :class="s.cardBadge">{{ item.badge }}</div>
+                <div :class="s.cardTitle">{{ $t(item.titleKey) }}</div>
+                <div :class="s.cardDesc">{{ $t(item.descKey) }}</div>
+                <div :class="s.cardBadge">{{ $t(item.badgeKey) }}</div>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@
     @opened:remove="it => hiddenPaths.delete(it.path)"
     />
     <footer :class="s.footer">
-      <span>Made with ❤️ on Vue 3</span>
+      <span>{{ $t('home.footer.caption') }}</span>
     </footer>
   </section>
 </template>

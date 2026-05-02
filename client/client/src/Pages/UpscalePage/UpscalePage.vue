@@ -3,10 +3,10 @@
     <div :class="s.container">
       <header :class="s.header">
         <h1 :class="s.title">
-          Image <span :class="s.accent">Upscale</span>
+          {{ $t('upscale.title.start') }} <span :class="s.accent">{{ $t('upscale.title.accent') }}</span>
         </h1>
         <p :class="s.subtitle">
-          Увеличение и улучшение изображений. Поддержаны быстрый «без ИИ», Real-ESRGAN и Waifu2x.
+          {{ $t('upscale.subtitle') }}
         </p>
       </header>
 
@@ -14,8 +14,8 @@
         <div :class="[s.card, s.left]">
           <DropZone @picked="onPicked" />
           <div v-if="files.length" :class="s.stats">
-            <span :class="s.badge">Файлов: {{ files.length }}</span>
-            <span :class="[s.badge, s.alt]">Суммарно: {{ totalSize }}</span>
+            <span :class="s.badge">{{ $t('upscale.stats.files') }} {{ files.length }}</span>
+            <span :class="[s.badge, s.alt]">{{ $t('upscale.stats.totalSize') }} {{ totalSize }}</span>
           </div>
 
           <div v-if="files.length" :class="s.previewGrid">
@@ -25,7 +25,7 @@
                 type="button"
                 :class="[s.thumb, selected === f && s.thumbActive]"
                 @click="select(f)"
-                title="Предпросмотр"
+                :title="$t('upscale.preview.title')"
             >
               <img :src="urls.get(f)!" alt="" />
               <div :class="s.meta">
@@ -43,57 +43,57 @@
         <div :class="[s.card, s.right]">
           <div :class="s.panel">
             <div :class="s.row">
-              <label :class="s.label">Метод</label>
+              <label :class="s.label">{{ $t('upscale.options.method') }}</label>
               <select v-model="method" :class="s.select">
-                <option value="nonai">Без ИИ (быстро)</option>
-                <option value="realesrgan">Real-ESRGAN (AI)</option>
-                <option value="waifu2x">Waifu2x (AI, арт/аниме)</option>
+                <option value="nonai">{{ $t('upscale.options.methodNonAi') }}</option>
+                <option value="realesrgan">{{ $t('upscale.options.methodRealEsrgan') }}</option>
+                <option value="waifu2x">{{ $t('upscale.options.methodWaifu2x') }}</option>
               </select>
             </div>
 
             <div :class="s.row">
-              <label :class="s.label">Целевой размер (max сторона)</label>
+              <label :class="s.label">{{ $t('upscale.options.targetSize') }}</label>
               <input
                   v-model.number="targetSize"
                   :class="s.input"
                   type="number" min="256" step="64"
-                  placeholder="например 1600"
+                  :placeholder="$t('upscale.options.targetSizePlaceholder')"
               />
             </div>
 
             <div v-if="method==='realesrgan'" :class="s.row2">
               <div>
-                <label :class="s.label">Модель</label>
+                <label :class="s.label">{{ $t('upscale.options.model') }}</label>
                 <select v-model="aiModel" :class="s.select">
-                  <option value="realesrgan-x4plus">x4plus (фото)</option>
-                  <option value="realesrgan-x4plus-anime">x4plus-anime</option>
+                  <option value="realesrgan-x4plus">{{ $t('upscale.options.modelX4plus') }}</option>
+                  <option value="realesrgan-x4plus-anime">{{ $t('upscale.options.modelX4plusAnime') }}</option>
                 </select>
               </div>
-              <div :class="s.hint">GPU ускорение</div>
+              <div :class="s.hint">{{ $t('upscale.hints.gpuAcceleration') }}</div>
             </div>
 
             <div v-if="method==='waifu2x'" :class="s.row2">
               <div>
-                <label :class="s.label">Шумоподавление</label>
+                <label :class="s.label">{{ $t('upscale.options.noiseReduction') }}</label>
                 <select v-model.number="waifuNoise" :class="s.select">
                   <option :value="0">0</option><option :value="1">1</option>
                   <option :value="2">2</option><option :value="3">3</option>
                 </select>
               </div>
-              <div :class="s.hint">Подходит для арта/манги</div>
+              <div :class="s.hint">{{ $t('upscale.hints.artManga') }}</div>
             </div>
           </div>
 
           <div v-if="selected" :class="s.compare">
             <div :class="s.col">
-              <div :class="s.caption">Оригинал</div>
+              <div :class="s.caption">{{ $t('upscale.compare.original') }}</div>
               <div :class="s.checker">
                 <img :src="urls.get(selected)!" alt="" />
               </div>
             </div>
             <div :class="s.col">
-              <div :class="s.caption">Улучшено</div>
-              <div v-if="loadingPrev" :class="s.note">Обработка…</div>
+              <div :class="s.caption">{{ $t('upscale.compare.result') }}</div>
+              <div v-if="loadingPrev" :class="s.note">{{ $t('common.status.processing') }}</div>
               <div v-else-if="previewError" :class="[s.note, s.error]">{{ previewError }}</div>
               <div v-else :class="s.checker">
                 <img v-if="previewUrl" :src="previewUrl" alt="" />
@@ -103,10 +103,10 @@
 
           <div :class="s.actions">
             <button :disabled="busy || !files.length" :class="s.btnPrimary" @click="run">
-              Улучшить (ZIP)
+              {{ $t('upscale.actions.submit') }}
             </button>
             <button type="button" :disabled="!files.length" :class="s.btnGhost" @click="clearFiles">
-              Очистить файлы
+              {{ $t('common.actions.clearFiles') }}
             </button>
             <span :class="[s.muted, s.status]">{{ status }}</span>
           </div>
