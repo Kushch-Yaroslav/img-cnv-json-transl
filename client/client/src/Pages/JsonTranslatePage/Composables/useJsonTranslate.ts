@@ -1,8 +1,10 @@
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import {highlightJson, prettyJson} from "@/Shared/Helpers/jsonFormat";
 import prettyBytesLib from 'pretty-bytes'
 
 export function useJsonTranslate() {
+    const { t } = useI18n()
     const file = ref<File | null>(null)
     const src  = ref('')
     const tgt  = ref('en')
@@ -44,7 +46,7 @@ export function useJsonTranslate() {
     async function doTranslate() {
         if (!file.value || !tgt.value) return
         busy.value = true
-        status.value = 'Перевод…'
+        status.value = t('jsonTranslate.status.processing')
         try {
             const fd = new FormData()
             fd.append('file', file.value)
@@ -77,15 +79,15 @@ export function useJsonTranslate() {
                 const obj = JSON.parse(txt)
                 dstText.value = prettyJson(obj)
             } catch {
-                dstText.value = '{ /* не удалось отобразить результат как JSON */ }'
+                dstText.value = t('jsonTranslate.preview.invalidJsonFallback')
             }
             URL.revokeObjectURL(url)
 
-            status.value = 'Готово ✔'
+            status.value = t('common.status.success')
             if (!showJson.value) showJson.value = true
         } catch (e: any) {
             console.error(e)
-            status.value = 'Ошибка: ' + (e?.message || 'unknown')
+            status.value = t('common.status.errorPrefix') + (e?.message || t('common.errors.unknown'))
         } finally {
             busy.value = false
         }

@@ -1,4 +1,5 @@
 import { ref, watch, type Ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 type HookArgs = {
     selected: Ref<File|null>
@@ -9,6 +10,7 @@ type HookArgs = {
 }
 
 export function useUpscalePreview() {
+    const { t } = useI18n()
     const previewUrl   = ref<string>()
     const loadingPrev  = ref(false)
     const previewError = ref('')
@@ -34,14 +36,14 @@ export function useUpscalePreview() {
             if (args.method.value === 'waifu2x')   fd.append('waifuNoise', String(args.waifuNoise.value))
 
             const resp = await fetch('/enhance/preview', { method:'POST', body:fd })
-            if (!resp.ok) throw new Error(await resp.text().catch(()=> '') || 'preview error')
+            if (!resp.ok) throw new Error(await resp.text().catch(()=> '') || t('upscale.errors.previewFailedFallback'))
             const blob = await resp.blob()
             clear()
             previewUrl.value = URL.createObjectURL(blob)
         } catch (e:any) {
             if (e?.name === 'AbortError') return
             clear()
-            previewError.value = e?.message || 'Ошибка предпросмотра'
+            previewError.value = e?.message || t('upscale.errors.previewGeneric')
         } finally {
             loadingPrev.value = false
         }

@@ -6,22 +6,22 @@ export type ToolAvailability = 'available' | 'coming-soon'
 
 export type HomeTool = {
     id: string
-    title: string
-    desc: string
+    titleKey: string
+    descKey: string
     path: string
     icon: string
-    badge: string
+    badgeKey: string
     availability: ToolAvailability
     optimizerMode?: OptimizerMode
 }
 
 export const featuredOptimizerTool: HomeTool = {
     id: 'all-in-one',
-    title: 'All-in-One Image Optimizer',
-    desc: 'Convert, compress, resize, crop and export in one workflow',
+    titleKey: 'tools.allInOne.title',
+    descKey: 'tools.allInOne.description',
     path: '/convert',
     icon: '⚡',
-    badge: 'Free up to 5 images / Pro unlimited',
+    badgeKey: 'tools.allInOne.badge',
     availability: 'available',
     optimizerMode: 'all-in-one',
 }
@@ -29,41 +29,41 @@ export const featuredOptimizerTool: HomeTool = {
 const simpleOptimizerTools: HomeTool[] = [
     {
         id: 'compress',
-        title: 'Compress Images',
-        desc: 'Reduce image weight for faster product pages',
+        titleKey: 'tools.compress.title',
+        descKey: 'tools.compress.description',
         path: '/compress',
         icon: '🗜️',
-        badge: 'Simple',
+        badgeKey: 'common.badges.simple',
         availability: 'available',
         optimizerMode: 'compress',
     },
     {
         id: 'resize',
-        title: 'Resize Images',
-        desc: 'Prepare exact sizes for web and marketplaces',
+        titleKey: 'tools.resize.title',
+        descKey: 'tools.resize.description',
         path: '/resize',
         icon: '📐',
-        badge: 'Simple',
+        badgeKey: 'common.badges.simple',
         availability: 'available',
         optimizerMode: 'resize',
     },
     {
         id: 'convert-format',
-        title: 'Convert Format',
-        desc: 'Switch between WebP, JPEG, PNG and AVIF',
+        titleKey: 'tools.format.title',
+        descKey: 'tools.format.description',
         path: '/convert-format',
         icon: '🔁',
-        badge: 'Simple',
+        badgeKey: 'common.badges.simple',
         availability: 'available',
         optimizerMode: 'format',
     },
     {
         id: 'crop',
-        title: 'Crop Images',
-        desc: 'Frame product images and thumbnails',
+        titleKey: 'tools.crop.title',
+        descKey: 'tools.crop.description',
         path: '/crop',
         icon: '✂️',
-        badge: 'Simple',
+        badgeKey: 'common.badges.simple',
         availability: 'available',
         optimizerMode: 'crop',
     },
@@ -72,27 +72,27 @@ const simpleOptimizerTools: HomeTool[] = [
 const commercialTools: Omit<HomeTool, 'availability'>[] = [
     {
         id: 'remove-bg',
-        title: 'Remove BG',
-        desc: 'AI background removal for product images',
+        titleKey: 'tools.removeBg.title',
+        descKey: 'tools.removeBg.description',
         path: '/remove-bg',
         icon: '🪄',
-        badge: 'Coming soon',
+        badgeKey: 'common.badges.comingSoon',
     },
     {
         id: 'upscale',
-        title: 'Upscale',
-        desc: 'Improve resolution and sharpness',
+        titleKey: 'tools.upscale.title',
+        descKey: 'tools.upscale.description',
         path: '/upscale',
         icon: '✨',
-        badge: 'Coming soon',
+        badgeKey: 'common.badges.comingSoon',
     },
     {
         id: 'translate',
-        title: 'Translate',
-        desc: 'JSON localization workflow',
+        titleKey: 'tools.translate.title',
+        descKey: 'tools.translate.description',
         path: '/translate',
         icon: '🌐',
-        badge: 'Coming soon',
+        badgeKey: 'common.badges.comingSoon',
     },
 ]
 
