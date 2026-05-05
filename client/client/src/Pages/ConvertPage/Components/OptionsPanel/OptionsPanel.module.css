@@ -152,6 +152,30 @@
     gap: 8px
 }
 
+.limitBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .14);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .28);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.limitBadgeWarn {
+    color: #ffd4d4;
+    background: rgba(140, 20, 20, .28);
+    border-color: rgba(255, 124, 124, .4);
+}
+
+.warningText {
+    color: #ffb4b4;
+}
+
 .btnGhost, .btnSmall {
     appearance: none;
     border: 0;
