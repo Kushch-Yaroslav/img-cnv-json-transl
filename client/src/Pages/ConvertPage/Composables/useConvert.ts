@@ -1,4 +1,7 @@
 import { ref, type Ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { downloadBlob } from '@/shared/platform/downloadAdapter'
+import type { ConvertOptions, ResizeVariant } from '@/shared/types/image'
 
 type ConvertDeps<OptionsModel> = {
     files: Ref<File[]>
@@ -6,16 +9,17 @@ type ConvertDeps<OptionsModel> = {
 }
 
 export function useConvert<
-    OptionsModel extends Record<string, any> & { inFolders?: boolean }
+    OptionsModel extends ConvertOptions = ConvertOptions
 >({ files, opts }: ConvertDeps<OptionsModel>) {
+    const { t } = useI18n()
     const busy = ref(false)
     const status = ref('')
 
-    async function convert() {
+    async function convert(): Promise<boolean> {
         try {
-            if (!files.value.length) return
+            if (!files.value.length) return false
             busy.value = true
-            status.value = 'Обработка...'
+            status.value = t('common.status.processing')
 
             const fd = new FormData()
             for (const f of files.value) fd.append('files', f)
@@ -43,8 +47,8 @@ export function useConvert<
 
             if (opts.multiResize && Array.isArray(opts.variants) && opts.variants.length) {
                 const clean = opts.variants
-                    .filter((v: any) => (v.w && v.w > 0) || (v.h && v.h > 0))
-                    .map((v: any) => ({ w: v.w ?? undefined, h: v.h ?? undefined }))
+                    .filter((v: ResizeVariant) => (v.w && v.w > 0) || (v.h && v.h > 0))
+                    .map((v: ResizeVariant) => ({ w: v.w ?? undefined, h: v.h ?? undefined }))
                 if (clean.length) fd.append('resizeVariants', JSON.stringify(clean))
             }
 
@@ -55,17 +59,14 @@ export function useConvert<
             if (!resp.ok) throw new Error('Server error')
 
             const blob = await resp.blob()
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = 'converted_images.zip'
-            a.click()
-            URL.revokeObjectURL(url)
+            downloadBlob(blob, 'converted_images.zip')
 
-            status.value = 'Готово ✔'
+            status.value = t('common.status.success')
+            return true
         } catch (e) {
             console.error(e)
-            status.value = 'Ошибка :('
+            status.value = t('common.status.errorGeneric')
+            return false
         } finally {
             busy.value = false
         }

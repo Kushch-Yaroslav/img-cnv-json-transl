@@ -152,6 +152,30 @@
     gap: 8px
 }
 
+.limitBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .14);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .28);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.limitBadgeWarn {
+    color: #ffd4d4;
+    background: rgba(140, 20, 20, .28);
+    border-color: rgba(255, 124, 124, .4);
+}
+
+.warningText {
+    color: #ffb4b4;
+}
+
 .btnGhost, .btnSmall {
     appearance: none;
     border: 0;
@@ -167,6 +191,25 @@
 .btnGhost:hover, .btnSmall:hover {
     filter: saturate(115%);
     transform: translateY(-1px)
+}
+
+.btnGhost:disabled,
+.btnSmall:disabled,
+.presetBtn:disabled,
+.modeOption:disabled,
+.checkbox input[type="checkbox"]:disabled,
+.input:disabled {
+    cursor: not-allowed;
+    opacity: .58;
+    transform: none;
+}
+
+.btnGhost:disabled:hover,
+.btnSmall:disabled:hover,
+.presetBtn:disabled:hover,
+.modeOption:disabled:hover {
+    filter: none;
+    transform: none;
 }
 
 .btnSmall {
@@ -296,6 +339,11 @@
     height: 0;
 }
 
+.switch:has(input:disabled) {
+    cursor: not-allowed;
+    opacity: .58;
+}
+
 .slider {
     position: absolute;
     inset: 0;
@@ -338,6 +386,15 @@
     flex-wrap: wrap;
 }
 
+.disabledRow {
+    opacity: .72;
+}
+
+.disabledRow .checkbox,
+.disabledRow .switch,
+.disabledRow button {
+    cursor: not-allowed;
+}
 
 @media (max-width: 520px) {
     .grid2 {

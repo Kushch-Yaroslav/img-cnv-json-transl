@@ -1,0 +1,316 @@
+{
+  "appMode": {
+    "local": { "label": "Local" },
+    "development": { "label": "Développement", "short": "Dev" },
+    "free": { "label": "Gratuit" },
+    "pro": { "label": "Pro" }
+  },
+  "common": {
+    "actions": {
+      "save": "Enregistrer",
+      "remove": "Supprimer",
+      "reset": "Réinitialiser",
+      "resetAll": "Tout réinitialiser",
+      "clearFiles": "Effacer les fichiers",
+      "selectFile": "Sélectionner un fichier",
+      "sort": "Trier"
+    },
+    "badges": {
+      "simple": "Simple",
+      "soon": "Bientôt",
+      "comingSoon": "Bientôt disponible",
+      "comingSoonShort": "Bientôt"
+    },
+    "status": {
+      "processing": "Traitement...",
+      "processingLower": "traitement...",
+      "success": "Terminé",
+      "ready": "prêt",
+      "errorGeneric": "Erreur",
+      "errorPrefix": "Erreur : ",
+      "errorPostfix": " :("
+    },
+    "errors": {
+      "unknown": "inconnu"
+    },
+    "placeholders": {
+      "optional": "optionnel",
+      "optionalShort": "opt."
+    }
+  },
+  "header": {
+    "logo": { "ariaLabel": "Accueil Image Tools" },
+    "nav": {
+      "home": "Accueil",
+      "allInOne": "Tout-en-un",
+      "removeBg": "Supprimer le fond",
+      "upscale": "Améliorer",
+      "translate": "Traduire"
+    },
+    "profile": { "ariaLabel": "Profil" }
+  },
+  "home": {
+    "hero": { "subtitle": "Optimisation locale des images pour boutiques en ligne, marketplaces et contenus e-commerce." },
+    "featured": { "kicker": "Workflow avancé" },
+    "footer": { "caption": "Créé avec ❤️ sur Vue 3" }
+  },
+  "tools": {
+    "allInOne": {
+      "title": "Optimiseur d’images tout-en-un",
+      "description": "Convertir, compresser, redimensionner, recadrer et exporter dans un seul workflow",
+      "badge": "Gratuit jusqu’à 5 images / Pro illimité"
+    },
+    "compress": {
+      "title": "Compresser les images",
+      "description": "Réduisez le poids des images pour des pages produit plus rapides"
+    },
+    "resize": {
+      "title": "Redimensionner les images",
+      "description": "Préparez des tailles exactes pour le web et les marketplaces"
+    },
+    "format": {
+      "title": "Convertir le format",
+      "description": "Passez entre WebP, JPEG, PNG et AVIF"
+    },
+    "crop": {
+      "title": "Recadrer les images",
+      "description": "Cadrez les images produit et les miniatures"
+    },
+    "removeBg": {
+      "title": "Suppression du fond",
+      "description": "Suppression du fond par IA pour les images produit"
+    },
+    "upscale": {
+      "title": "Amélioration d’image",
+      "description": "Améliorez la résolution et la netteté"
+    },
+    "translate": {
+      "title": "Traduction",
+      "description": "Workflow de localisation JSON"
+    }
+  },
+  "dropzone": {
+    "title": "Déposez les fichiers ici",
+    "subtitle": "...ou cliquez pour choisir"
+  },
+  "dock": {
+    "dropZone": { "label": "Glissez une carte ici" }
+  },
+  "convert": {
+    "mode": {
+      "allInOne": { "titleStart": "Tout-en-un", "titleAccent": "optimiseur d’images", "subtitle": "Convertir, compresser, redimensionner, recadrer et exporter dans un seul workflow" },
+      "compress": { "titleStart": "Compression", "titleAccent": "d’images", "subtitle": "Réduisez la taille des fichiers pour des pages web plus rapides" },
+      "resize": { "titleStart": "Redimensionnement", "titleAccent": "d’images", "subtitle": "Préparez des tailles exactes pour le web et les marketplaces" },
+      "format": { "titleStart": "Conversion", "titleAccent": "de format", "subtitle": "Passez entre JPEG, PNG, WebP et AVIF" },
+      "crop": { "titleStart": "Recadrage", "titleAccent": "d’images", "subtitle": "Cadrez les images produit et les miniatures" }
+    },
+    "stats": {
+      "files": "Fichiers :",
+      "totalSize": "Taille totale :",
+      "sourceImages": "Images source :"
+    },
+    "actions": {
+      "submit": "Convertir",
+      "processing": "Conversion..."
+    },
+    "limits": {
+      "freeLimitExceeded": "Limite du mode gratuit : {count} images source",
+      "freeResizeMultiSourceImage": "Le multi-tailles gratuit n’autorise qu’une seule image source",
+      "freeResizeMultiOutputSizes": "Le multi-tailles gratuit autorise jusqu’à {count} tailles de sortie",
+      "freeResizeMultiSelectedSizes": "Le multi-tailles gratuit autorise jusqu’à {count} tailles sélectionnées"
+    },
+    "options": {
+      "outputFormat": {
+        "label": "Format de sortie",
+        "same": "Conserver tel quel"
+      },
+      "resize": {
+        "toggle": "Redimensionner",
+        "maxWidth": "Largeur max.",
+        "maxWidthPlaceholder": "ex. 1600",
+        "maxHeight": "Hauteur max."
+      },
+      "multiResize": {
+        "toggle": "Tailles multiples",
+        "addVariant": "+ Ajouter une taille",
+        "selectedSizes": "Tailles sélectionnées :",
+        "modeLabel": "Mode des ensembles",
+        "mode": {
+          "switch": "Remplacer",
+          "add": "Ajouter"
+        },
+        "presets": {
+          "desktop": "Ordinateurs",
+          "tablet": "Tablettes",
+          "phone": "Téléphones",
+          "all": "Tout à la fois",
+          "macro1": "Macro 1"
+        },
+        "variantWidth": "L",
+        "variantWidthPlaceholder": "ex. 1080",
+        "variantHeight": "H",
+        "hint": "Si vous indiquez uniquement la largeur, la hauteur sera calculée proportionnellement (fit: inside)."
+      },
+      "export": {
+        "inFolders": "Enregistrer dans des dossiers"
+      },
+      "compression": {
+        "lossless": "Sans perte",
+        "quality": "Qualité (pour compression avec perte) :",
+        "targetWeight": "Poids cible (KB)",
+        "targetWeightPlaceholder": "ex. 180"
+      },
+      "optimize": {
+        "stripMetadata": "Supprimer EXIF/métadonnées",
+        "minSize": "minSize",
+        "smartSubsample": "smartSubsample"
+      }
+    }
+  },
+  "cropModal": {
+    "actions": {
+      "resetArea": "Réinitialiser la zone",
+      "restoreOriginal": "Restaurer l’original"
+    },
+    "shape": {
+      "label": "Forme :",
+      "rectangle": "Rectangle",
+      "circle": "Cercle"
+    },
+    "ratio": {
+      "free": "Libre"
+    },
+    "hint": "Faites glisser le cadre ou les coins. La zone reste toujours à l’intérieur de l’image.",
+    "preview": {
+      "title": "Aperçu en direct",
+      "hint": "L’aperçu se met à jour pendant le déplacement et le redimensionnement du recadrage."
+    }
+  },
+  "previewGrid": {
+    "remove": { "title": "Supprimer" },
+    "badges": {
+      "cropped": "Recadrée",
+      "original": "Original"
+    }
+  },
+  "removeBg": {
+    "title": {
+      "start": "Suppression",
+      "accent": "du fond"
+    },
+    "subtitle": "Suppression du fond par IA avec aperçu. Modèle et session — automatiques.",
+    "stats": {
+      "files": "Fichiers :",
+      "totalSize": "Taille totale :"
+    },
+    "preview": { "title": "Aperçu" },
+    "options": {
+      "outputFormat": "Format de sortie",
+      "outputFormatPng": "PNG (transparence)",
+      "outputFormatWebp": "WEBP",
+      "outputFormatJpeg": "JPEG (sans transparence)",
+      "outputFormatAvif": "AVIF",
+      "backgroundColor": "Couleur du fond (pour JPEG / optionnel)"
+    },
+    "compare": {
+      "original": "Original",
+      "result": "Sans fond",
+      "largeTitle": "Comparaison 1000×1000 — {name}"
+    },
+    "actions": {
+      "submit": "Supprimer le fond (ZIP)"
+    },
+    "errors": {
+      "batchFailedFallback": "erreur de suppression du fond",
+      "previewFailedFallback": "erreur d’aperçu",
+      "previewGeneric": "Erreur d’aperçu"
+    }
+  },
+  "upscale": {
+    "title": {
+      "start": "Amélioration",
+      "accent": "d’image"
+    },
+    "subtitle": "Agrandissez et améliorez les images. Pris en charge : mode rapide \"non-AI\", Real-ESRGAN et Waifu2x.",
+    "stats": {
+      "files": "Fichiers :",
+      "totalSize": "Taille totale :"
+    },
+    "preview": { "title": "Aperçu" },
+    "options": {
+      "method": "Méthode",
+      "methodNonAi": "Non-AI (rapide)",
+      "methodRealEsrgan": "Real-ESRGAN (AI)",
+      "methodWaifu2x": "Waifu2x (AI, art/anime)",
+      "targetSize": "Taille cible (côté max.)",
+      "targetSizePlaceholder": "ex. 1600",
+      "model": "Modèle",
+      "modelX4plus": "x4plus (photo)",
+      "modelX4plusAnime": "x4plus-anime",
+      "noiseReduction": "Réduction du bruit"
+    },
+    "hints": {
+      "gpuAcceleration": "Accélération GPU",
+      "artManga": "Adapté à art/manga"
+    },
+    "compare": {
+      "original": "Original",
+      "result": "Améliorée"
+    },
+    "actions": {
+      "submit": "Améliorer (ZIP)"
+    },
+    "errors": {
+      "batchFailedFallback": "erreur d’amélioration",
+      "previewFailedFallback": "erreur d’aperçu",
+      "previewGeneric": "Erreur d’aperçu"
+    }
+  },
+  "jsonTranslate": {
+    "title": "JSON Translate",
+    "models": {
+      "small": { "description": "léger" },
+      "medium": { "description": "équilibré" },
+      "active": { "description": "actuel" }
+    },
+    "file": {
+      "label": "Fichier JSON",
+      "empty": "Aucun fichier sélectionné"
+    },
+    "languages": {
+      "source": "Langue source (vide = auto)",
+      "sourcePlaceholder": "it / ru / en ...",
+      "target": "Langue cible",
+      "targetPlaceholder": "en"
+    },
+    "actions": {
+      "submit": "Traduire (ZIP)",
+      "hidePreview": "Masquer le JSON",
+      "showPreview": "Afficher le JSON"
+    },
+    "preview": {
+      "sourceTitle": "JSON source",
+      "readOnly": "lecture seule",
+      "resultTitle": "Traduction",
+      "invalidJsonFallback": "{ /* impossible d’afficher le résultat comme JSON */ }"
+    },
+    "status": {
+      "processing": "Traduction..."
+    }
+  },
+  "pipeline": {
+    "title": "Pipeline 1080×1080 → RemoveBG → WebP(85)",
+    "stats": {
+      "files": "Fichiers : "
+    },
+    "actions": {
+      "submit": "Exécuter la pipeline (ZIP)"
+    },
+    "description": {
+      "steps": "Étapes : redimensionnement en 1080×1080 (fit: inside, sans upscale) → suppression du fond (AI) → WebP (qualité 85, minSize, smartSubsample) → suppression des métadonnées."
+    },
+    "errors": {
+      "batchFailedFallback": "erreur de pipeline"
+    }
+  }
+}

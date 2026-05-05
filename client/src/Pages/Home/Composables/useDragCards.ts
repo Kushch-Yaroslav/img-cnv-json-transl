@@ -21,23 +21,23 @@ type DragCtx = {
 
 }
 
-type Opts = {
+type Opts<TItem> = {
     gridRef: () => HTMLElement | null
     getCardElByIndex: (i: number) => HTMLElement | null
     getLinkElByCard: (cardEl: HTMLElement) => HTMLElement | null
-    itemsRef: Ref<any[]>                             // ⬅ список для перестановки
+    itemsRef: Ref<TItem[]>                             // ⬅ список для перестановки
     onDropOutside?: (index: number, el: HTMLElement, ev: PointerEvent) => void
     s: Record<string, string>
     getDockRect?: () => DOMRect | null
-    dropToDock?: (item: any) => void
-    getItemByIndex?: (i:number)=>any
+    dropToDock?: (item: TItem | null) => void
+    getItemByIndex?: (i:number)=>TItem
     onDragStart?: () => void
     onDragEnd?:   () => void
 }
 
 
 
-export function useDragCards(opts: Opts) {
+export function useDragCards<TItem>(opts: Opts<TItem>) {
     const dragging = ref(false)
     const ctx = ref<DragCtx | null>(null)
 

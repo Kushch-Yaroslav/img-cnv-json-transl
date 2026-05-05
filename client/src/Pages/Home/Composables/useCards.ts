@@ -1,8 +1,9 @@
 import { ref, nextTick } from 'vue'
+import type { Router } from 'vue-router'
 import { useMagnet } from './useMagnet'
 import { useTilt } from './useTilt'
 
-export function useCards(router: any, s: Record<string, string>) {
+export function useCards(router: Router, s: Record<string, string>) {
     const cardEls = ref<HTMLElement[]>([])
     const tiltEls = ref<HTMLElement[]>([])
     const seenCard = new WeakSet<HTMLElement>()
@@ -10,7 +11,7 @@ export function useCards(router: any, s: Record<string, string>) {
     const cardTilt = ref<ReturnType<typeof useTilt>[]>([])
     const magnets: Array<ReturnType<typeof useMagnet>> = []
 
-    function setCardRef(el: Element | any) {
+    function setCardRef(el: Element | null) {
         const node = el as HTMLElement
         if (!node || node.nodeType !== 1) return
         if (!seenCard.has(node)) { seenCard.add(node); cardEls.value.push(node) }

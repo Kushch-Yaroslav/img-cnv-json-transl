@@ -1,9 +1,12 @@
 import { ref, watch, type Ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { RItem } from './useRmbgFiles'
+import type { PreviewState } from '@/shared/types/operations'
 
-type PState = { url?: string; loading: boolean; error?: string }
+type PState = PreviewState
 
 export function useRmbgPreviews() {
+    const { t } = useI18n()
     const states = ref<Record<string, PState>>({})  // key: item.id
     let controllers = new Map<string, AbortController>()
 
@@ -31,14 +34,14 @@ export function useRmbgPreviews() {
                 signal: ctrl.signal,
                 headers: { 'x-preview': Date.now().toString() },
             })
-            if (!resp.ok) throw new Error(await resp.text().catch(()=>'') || 'preview error')
+            if (!resp.ok) throw new Error(await resp.text().catch(()=>'') || t('removeBg.errors.previewFailedFallback'))
 
             const blob = await resp.blob()
             const url = URL.createObjectURL(blob)
             states.value = { ...states.value, [id]: { loading: false, url } }
         } catch (e:any) {
             if (e?.name === 'AbortError') return
-            states.value = { ...states.value, [id]: { loading: false, error: e?.message || 'Ошибка предпросмотра' } }
+            states.value = { ...states.value, [id]: { loading: false, error: e?.message || t('removeBg.errors.previewGeneric') } }
         }
     }
 

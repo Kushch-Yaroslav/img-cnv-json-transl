@@ -3,10 +3,10 @@
     <div :class="s.container">
       <header :class="s.header">
         <h1 :class="s.title">
-          Remove <span :class="s.accent">Background</span>
+          {{ $t('removeBg.title.start') }} <span :class="s.accent">{{ $t('removeBg.title.accent') }}</span>
         </h1>
         <p :class="s.subtitle">
-          Удаление фона AI с предпросмотром. Модель и сессия — auto.
+          {{ $t('removeBg.subtitle') }}
         </p>
       </header>
 
@@ -16,8 +16,8 @@
           <DropZone @picked="onPicked" />
 
           <div v-if="items.length" :class="s.stats">
-            <span :class="s.badge">Файлов: {{ items.length }}</span>
-            <span :class="[s.badge, s.alt]">Суммарно: {{ totalSize }}</span>
+            <span :class="s.badge">{{ $t('removeBg.stats.files') }} {{ items.length }}</span>
+            <span :class="[s.badge, s.alt]">{{ $t('removeBg.stats.totalSize') }} {{ totalSize }}</span>
           </div>
 
           <div v-if="items.length" :class="s.previewGrid">
@@ -27,7 +27,7 @@
                 type="button"
                 :class="[s.thumb, selectedId === it.id && s.thumbActive]"
                 @click="select(it.id)"
-                title="Предпросмотр"
+                :title="$t('removeBg.preview.title')"
             >
               <img :src="it.url" alt="" />
               <div :class="s.meta">
@@ -46,17 +46,17 @@
         <div :class="[s.card, s.right]">
           <div :class="s.panel">
             <div :class="s.row">
-              <label :class="s.label">Выходной формат</label>
+              <label :class="s.label">{{ $t('removeBg.options.outputFormat') }}</label>
               <select v-model="outputFormat" :class="s.select">
-                <option value="png">PNG (прозрачность)</option>
-                <option value="webp">WEBP</option>
-                <option value="jpeg">JPEG (без прозрачности)</option>
-                <option value="avif">AVIF</option>
+                <option value="png">{{ $t('removeBg.options.outputFormatPng') }}</option>
+                <option value="webp">{{ $t('removeBg.options.outputFormatWebp') }}</option>
+                <option value="jpeg">{{ $t('removeBg.options.outputFormatJpeg') }}</option>
+                <option value="avif">{{ $t('removeBg.options.outputFormatAvif') }}</option>
               </select>
             </div>
 
             <div :class="s.row">
-              <label :class="s.label">Цвет фона (для JPEG / опционально)</label>
+              <label :class="s.label">{{ $t('removeBg.options.backgroundColor') }}</label>
               <input v-model="bgColor" type="color" :class="s.color" />
             </div>
           </div>
@@ -64,15 +64,15 @@
           <div v-if="items.length" :class="s.compare">
             <template v-for="it in items" :key="it.id">
               <div :class="s.col" @click="largeId = it.id; ensureOne(it, bgColor)">
-                <div :class="s.caption">Оригинал</div>
+                <div :class="s.caption">{{ $t('removeBg.compare.original') }}</div>
                 <div :class="s.checker">
                   <img :src="it.url" alt="" />
                 </div>
               </div>
 
               <div :class="s.col" @click="largeId = it.id; ensureOne(it, bgColor)">
-                <div :class="s.caption">Без фона</div>
-                <div v-if="states[it.id]?.loading" :class="s.note">Обработка…</div>
+                <div :class="s.caption">{{ $t('removeBg.compare.result') }}</div>
+                <div v-if="states[it.id]?.loading" :class="s.note">{{ $t('common.status.processing') }}</div>
                 <div v-else-if="states[it.id]?.error" :class="[s.note, s.error]">{{ states[it.id]?.error }}</div>
                 <div v-else :class="s.checker">
                   <img v-if="states[it.id]?.url" :src="states[it.id]?.url" alt="" />
@@ -83,10 +83,10 @@
 
           <div :class="s.actions">
             <button :disabled="busy || !items.length" :class="s.btnPrimary" @click="removeBatch">
-              Удалить фон (ZIP)
+              {{ $t('removeBg.actions.submit') }}
             </button>
             <button type="button" :disabled="!items.length" :class="s.btnGhost" @click="clearFiles">
-              Очистить файлы
+              {{ $t('common.actions.clearFiles') }}
             </button>
             <span :class="[s.muted, s.status]">{{ status }}</span>
           </div>
@@ -96,7 +96,7 @@
       <!-- Большой слайдер 1000×1000 снизу -->
       <div v-if="largeItem && states[largeItem.id]?.url" style="padding:16px">
         <h3 style="margin:0 0 8px; font-weight:900; letter-spacing:.3px">
-          Сравнение 1000×1000 — {{ largeItem.file.name }}
+          {{ $t('removeBg.compare.largeTitle', { name: largeItem.file.name }) }}
         </h3>
         <CompareSlider :before="largeBefore" :after="largeAfter" :size="1000" />
       </div>
@@ -115,10 +115,11 @@ import { useRmbgFiles, type RItem } from './Composables/useRmbgFiles'
 import { useRmbgBatch } from './Composables/useRmbgBatch'
 import {useRmbgPreviews} from "@/Pages/RemoveBgPage/Composables/useRmbgPreview";
 import CompareSlider from "@/Pages/RemoveBgPage/Components/CompareSlider.vue";
+import type { ImageOutputFormat } from '@/shared/types/image'
 
 const { items, selectedId, onPicked, select, clearAll: clearFiles } = useRmbgFiles()
 
-const outputFormat = ref<'png'|'webp'|'jpeg'|'avif'>('png')
+const outputFormat = ref<ImageOutputFormat>('png')
 const bgColor = ref('') // пусто => прозрачность
 
 // Предпросмотры: либо префетчим все, либо делаем лениво через ensureOne()

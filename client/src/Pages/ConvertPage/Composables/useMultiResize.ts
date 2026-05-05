@@ -1,9 +1,10 @@
 import { Ref } from 'vue'
+import type { MultiResizeMode, ResizeVariant } from '@/shared/types/image'
 
 // Типы
-export type Variant = { w?: number; h?: number; _k?: string }
+export type Variant = ResizeVariant
 export type SetKey = 'desktop' | 'tablet' | 'phone' | 'all' | 'macro1'
-export type MultiMode = 'switch' | 'add'
+export type MultiMode = MultiResizeMode
 
 export interface OptionsLike {
     multiResize?: boolean
@@ -165,6 +166,7 @@ export function useMultiResize(model: Ref<OptionsLike>) {
         resetAll,
         sortAll,
         applySet,
+        getPack,
         isSetActive,
     }
 }

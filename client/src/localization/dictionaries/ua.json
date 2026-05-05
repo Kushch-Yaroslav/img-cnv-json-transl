@@ -1,0 +1,316 @@
+{
+  "appMode": {
+    "local": { "label": "Локальний" },
+    "development": { "label": "Розробка", "short": "Dev" },
+    "free": { "label": "Безкоштовний" },
+    "pro": { "label": "Pro" }
+  },
+  "common": {
+    "actions": {
+      "save": "Зберегти",
+      "remove": "Видалити",
+      "reset": "Скинути",
+      "resetAll": "Скинути все",
+      "clearFiles": "Очистити файли",
+      "selectFile": "Вибрати файл",
+      "sort": "Сортувати"
+    },
+    "badges": {
+      "simple": "Просто",
+      "soon": "Скоро",
+      "comingSoon": "Скоро буде",
+      "comingSoonShort": "Скоро"
+    },
+    "status": {
+      "processing": "Обробка...",
+      "processingLower": "обробка...",
+      "success": "Готово",
+      "ready": "готово",
+      "errorGeneric": "Помилка",
+      "errorPrefix": "Помилка: ",
+      "errorPostfix": " :("
+    },
+    "errors": {
+      "unknown": "невідомо"
+    },
+    "placeholders": {
+      "optional": "необов’язково",
+      "optionalShort": "необов."
+    }
+  },
+  "header": {
+    "logo": { "ariaLabel": "Головна Image Tools" },
+    "nav": {
+      "home": "Головна",
+      "allInOne": "Все в одному",
+      "removeBg": "Видалити фон",
+      "upscale": "Покращення",
+      "translate": "Переклад"
+    },
+    "profile": { "ariaLabel": "Профіль" }
+  },
+  "home": {
+    "hero": { "subtitle": "Локальна оптимізація зображень для інтернет-магазинів, маркетплейсів та e-commerce контенту." },
+    "featured": { "kicker": "Розширений workflow" },
+    "footer": { "caption": "Зроблено з ❤️ на Vue 3" }
+  },
+  "tools": {
+    "allInOne": {
+      "title": "Оптимізатор зображень все-в-одному",
+      "description": "Конвертація, стиснення, зміна розміру, обрізання та експорт в одному workflow",
+      "badge": "Безкоштовно до 5 зображень / Pro без обмежень"
+    },
+    "compress": {
+      "title": "Стиснення зображень",
+      "description": "Зменшуйте вагу зображень для швидших товарних сторінок"
+    },
+    "resize": {
+      "title": "Зміна розміру",
+      "description": "Готуйте точні розміри для сайтів і маркетплейсів"
+    },
+    "format": {
+      "title": "Конвертація формату",
+      "description": "Перемикайтеся між WebP, JPEG, PNG та AVIF"
+    },
+    "crop": {
+      "title": "Обрізання зображень",
+      "description": "Кадруйте товарні зображення та прев’ю"
+    },
+    "removeBg": {
+      "title": "Видалення фону",
+      "description": "AI-видалення фону для товарних зображень"
+    },
+    "upscale": {
+      "title": "Покращення зображення",
+      "description": "Підвищуйте роздільну здатність і різкість"
+    },
+    "translate": {
+      "title": "Переклад",
+      "description": "Workflow для локалізації JSON"
+    }
+  },
+  "dropzone": {
+    "title": "Перетягніть файли сюди",
+    "subtitle": "...або натисніть, щоб вибрати"
+  },
+  "dock": {
+    "dropZone": { "label": "Перетягніть картку сюди" }
+  },
+  "convert": {
+    "mode": {
+      "allInOne": { "titleStart": "Все-в-одному", "titleAccent": "оптимізатор зображень", "subtitle": "Конвертація, стиснення, зміна розміру, обрізання та експорт в одному workflow" },
+      "compress": { "titleStart": "Стиснення", "titleAccent": "зображень", "subtitle": "Зменшуйте розмір файлів для швидших веб-сторінок" },
+      "resize": { "titleStart": "Зміна розміру", "titleAccent": "зображень", "subtitle": "Готуйте точні розміри для сайтів і маркетплейсів" },
+      "format": { "titleStart": "Конвертація", "titleAccent": "формату", "subtitle": "Перемикайтеся між JPEG, PNG, WebP та AVIF" },
+      "crop": { "titleStart": "Обрізання", "titleAccent": "зображень", "subtitle": "Кадруйте товарні зображення та прев’ю" }
+    },
+    "stats": {
+      "files": "Файли:",
+      "totalSize": "Загальний розмір:",
+      "sourceImages": "Вихідні зображення:"
+    },
+    "actions": {
+      "submit": "Конвертувати",
+      "processing": "Конвертація..."
+    },
+    "limits": {
+      "freeLimitExceeded": "Ліміт безкоштовного режиму: {count} вихідних зображень",
+      "freeResizeMultiSourceImage": "У безкоштовному мульти-розмірі доступне лише 1 вихідне зображення",
+      "freeResizeMultiOutputSizes": "У безкоштовному мульти-розмірі доступно не більше {count} вихідних розмірів",
+      "freeResizeMultiSelectedSizes": "У безкоштовному мульти-розмірі доступно не більше {count} вибраних розмірів"
+    },
+    "options": {
+      "outputFormat": {
+        "label": "Формат виводу",
+        "same": "Залишити як є"
+      },
+      "resize": {
+        "toggle": "Змінити розмір",
+        "maxWidth": "Макс. ширина",
+        "maxWidthPlaceholder": "наприклад, 1600",
+        "maxHeight": "Макс. висота"
+      },
+      "multiResize": {
+        "toggle": "Кілька розмірів",
+        "addVariant": "+ Додати розмір",
+        "selectedSizes": "Вибрано розмірів:",
+        "modeLabel": "Режим наборів",
+        "mode": {
+          "switch": "Перемикати",
+          "add": "Додавати"
+        },
+        "presets": {
+          "desktop": "Десктопи",
+          "tablet": "Планшети",
+          "phone": "Телефони",
+          "all": "Усі одразу",
+          "macro1": "Макро 1"
+        },
+        "variantWidth": "Ш",
+        "variantWidthPlaceholder": "наприклад, 1080",
+        "variantHeight": "В",
+        "hint": "Якщо вказати лише ширину, висота буде розрахована пропорційно (fit: inside)."
+      },
+      "export": {
+        "inFolders": "Зберігати в папки"
+      },
+      "compression": {
+        "lossless": "Без втрат",
+        "quality": "Якість (для стиснення з втратами):",
+        "targetWeight": "Цільова вага (KB)",
+        "targetWeightPlaceholder": "наприклад, 180"
+      },
+      "optimize": {
+        "stripMetadata": "Видалити EXIF/метадані",
+        "minSize": "minSize",
+        "smartSubsample": "smartSubsample"
+      }
+    }
+  },
+  "cropModal": {
+    "actions": {
+      "resetArea": "Скинути область",
+      "restoreOriginal": "Повернути оригінал"
+    },
+    "shape": {
+      "label": "Форма:",
+      "rectangle": "Прямокутник",
+      "circle": "Коло"
+    },
+    "ratio": {
+      "free": "Вільно"
+    },
+    "hint": "Перетягуйте рамку або кути. Область завжди залишається всередині зображення.",
+    "preview": {
+      "title": "Попередній перегляд",
+      "hint": "Попередній перегляд оновлюється під час переміщення та зміни розміру області."
+    }
+  },
+  "previewGrid": {
+    "remove": { "title": "Видалити" },
+    "badges": {
+      "cropped": "Обрізано",
+      "original": "Оригінал"
+    }
+  },
+  "removeBg": {
+    "title": {
+      "start": "Видалення",
+      "accent": "фону"
+    },
+    "subtitle": "AI-видалення фону з передпереглядом. Модель і сесія — автоматично.",
+    "stats": {
+      "files": "Файли:",
+      "totalSize": "Загальний розмір:"
+    },
+    "preview": { "title": "Передперегляд" },
+    "options": {
+      "outputFormat": "Формат виводу",
+      "outputFormatPng": "PNG (прозорість)",
+      "outputFormatWebp": "WEBP",
+      "outputFormatJpeg": "JPEG (без прозорості)",
+      "outputFormatAvif": "AVIF",
+      "backgroundColor": "Колір фону (для JPEG / необов’язково)"
+    },
+    "compare": {
+      "original": "Оригінал",
+      "result": "Без фону",
+      "largeTitle": "Порівняння 1000×1000 — {name}"
+    },
+    "actions": {
+      "submit": "Видалити фон (ZIP)"
+    },
+    "errors": {
+      "batchFailedFallback": "помилка видалення фону",
+      "previewFailedFallback": "помилка передперегляду",
+      "previewGeneric": "Помилка передперегляду"
+    }
+  },
+  "upscale": {
+    "title": {
+      "start": "Покращення",
+      "accent": "зображення"
+    },
+    "subtitle": "Збільшення та покращення зображень. Підтримується: швидкий \"не-AI\" режим, Real-ESRGAN і Waifu2x.",
+    "stats": {
+      "files": "Файли:",
+      "totalSize": "Загальний розмір:"
+    },
+    "preview": { "title": "Передперегляд" },
+    "options": {
+      "method": "Метод",
+      "methodNonAi": "Не-AI (швидко)",
+      "methodRealEsrgan": "Real-ESRGAN (AI)",
+      "methodWaifu2x": "Waifu2x (AI, art/anime)",
+      "targetSize": "Цільовий розмір (макс. сторона)",
+      "targetSizePlaceholder": "наприклад, 1600",
+      "model": "Модель",
+      "modelX4plus": "x4plus (фото)",
+      "modelX4plusAnime": "x4plus-anime",
+      "noiseReduction": "Шумозаглушення"
+    },
+    "hints": {
+      "gpuAcceleration": "GPU-прискорення",
+      "artManga": "Підходить для art/manga"
+    },
+    "compare": {
+      "original": "Оригінал",
+      "result": "Покращено"
+    },
+    "actions": {
+      "submit": "Покращити (ZIP)"
+    },
+    "errors": {
+      "batchFailedFallback": "помилка покращення",
+      "previewFailedFallback": "помилка передперегляду",
+      "previewGeneric": "Помилка передперегляду"
+    }
+  },
+  "jsonTranslate": {
+    "title": "JSON Translate",
+    "models": {
+      "small": { "description": "легка" },
+      "medium": { "description": "збалансована" },
+      "active": { "description": "поточна" }
+    },
+    "file": {
+      "label": "JSON-файл",
+      "empty": "Файл не вибрано"
+    },
+    "languages": {
+      "source": "Вихідна мова (порожньо = авто)",
+      "sourcePlaceholder": "it / ru / en ...",
+      "target": "Цільова мова",
+      "targetPlaceholder": "en"
+    },
+    "actions": {
+      "submit": "Перекласти (ZIP)",
+      "hidePreview": "Сховати JSON",
+      "showPreview": "Показати JSON"
+    },
+    "preview": {
+      "sourceTitle": "Вихідний JSON",
+      "readOnly": "тільки читання",
+      "resultTitle": "Переклад",
+      "invalidJsonFallback": "{ /* не вдалося відобразити результат як JSON */ }"
+    },
+    "status": {
+      "processing": "Переклад..."
+    }
+  },
+  "pipeline": {
+    "title": "Пайплайн 1080×1080 → RemoveBG → WebP(85)",
+    "stats": {
+      "files": "Файли: "
+    },
+    "actions": {
+      "submit": "Запустити пайплайн (ZIP)"
+    },
+    "description": {
+      "steps": "Кроки: зміна розміру до 1080×1080 (fit: inside, без збільшення) → видалення фону (AI) → WebP (якість 85, minSize, smartSubsample) → видалення метаданих."
+    },
+    "errors": {
+      "batchFailedFallback": "помилка пайплайна"
+    }
+  }
+}

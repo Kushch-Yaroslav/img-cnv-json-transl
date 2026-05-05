@@ -1,4 +1,4 @@
-export function prettyJson(obj: any): string {
+export function prettyJson(obj: unknown): string {
     return JSON.stringify(obj, null, 2)
 }
 

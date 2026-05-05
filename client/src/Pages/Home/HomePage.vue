@@ -8,32 +8,53 @@
         <span :class="s.sparkle" aria-hidden="true">✦</span>
       </div>
       <p :class="s.subtitle">
-        Быстрые модули для конвертации, улучшения и перевода изображений — в одном месте.
+        {{ $t('home.hero.subtitle') }}
       </p>
     </header>
+
+    <RouterLink :to="featuredTool.path" custom v-slot="{ href }">
+      <a
+          :href="href"
+          :class="[s.featuredLink, { [s.cardReady]: ready }]"
+          @click.prevent="() => onFeaturedClick(featuredTool.path)"
+      >
+        <div :class="s.featuredBox">
+          <div :class="s.featuredGlow" aria-hidden="true"></div>
+          <div :class="s.featuredIcon">{{ featuredTool.icon }}</div>
+          <div :class="s.featuredCopy">
+            <div :class="s.featuredKicker">{{ $t('home.featured.kicker') }}</div>
+            <h2 :class="s.featuredTitle">{{ $t(featuredTool.titleKey) }}</h2>
+            <p :class="s.featuredDesc">{{ $t(featuredTool.descKey) }}</p>
+          </div>
+          <div :class="s.featuredBadge">{{ $t(featuredTool.badgeKey) }}</div>
+        </div>
+      </a>
+    </RouterLink>
 
     <main :class="s.grid" ref="gridRef">
       <RouterLink v-for="(item, i) in visibleItems" :key="item.path" :to="item.path" custom v-slot="{ href }">
         <a
-            :href="href"
-            :class="[s.cardLink, { [s.cardReady]: ready }]"
-            @click.prevent="(e) => onCardClick(e, item.path)"
-            @mousemove="(e) => cardTilt[i]?.onMove(e)"
-            @mouseenter="() => { cardTilt[i]?.onEnter(); onCardHoverStart() }"
-            @mouseleave="() => { cardTilt[i]?.onLeave(); onCardHoverEnd() }"
+            :href="isToolAvailable(item) ? href : undefined"
+            :class="[s.cardLink, { [s.cardReady]: ready, [s.cardDisabled]: !isToolAvailable(item) }]"
+            :aria-disabled="!isToolAvailable(item)"
+            :tabindex="isToolAvailable(item) ? 0 : -1"
+            @click.prevent="(e) => onToolClick(e, item)"
+            @mousemove="(e) => isToolAvailable(item) && cardTilt[i]?.onMove(e)"
+            @mouseenter="() => { if (isToolAvailable(item)) { cardTilt[i]?.onEnter(); onCardHoverStart() } }"
+            @mouseleave="() => { if (isToolAvailable(item)) { cardTilt[i]?.onLeave(); onCardHoverEnd() } }"
         >
           <div
               :class="s.cardMover"
-              :ref="setCardRef"
-              @pointerdown.stop.prevent="(e)=> (items[i].path === '/home' || items[i].path === '/main') ? null : onCardPointerDown(i, e)"
+              :ref="(el) => { if (isToolAvailable(item)) setCardRef(el) }"
+              @pointerdown.stop.prevent="(e)=> isToolAvailable(visibleItems[i]) ? onCardPointerDown(i, e) : null"
           >
             <div :class="s.cardBox">
               <div :class="s.cardShine" aria-hidden="true"></div>
-              <div :class="s.cardInner" :ref="setTiltRef">
+              <div :class="s.cardInner" :ref="(el) => { if (isToolAvailable(item)) setTiltRef(el) }">
                 <div :class="s.cardIcon">{{ item.icon }}</div>
-                <div :class="s.cardTitle">{{ item.title }}</div>
-                <div :class="s.cardDesc">{{ item.desc }}</div>
-                <div :class="s.cardBadge">{{ item.badge }}</div>
+                <div :class="s.cardTitle">{{ $t(item.titleKey) }}</div>
+                <div :class="s.cardDesc">{{ $t(item.descKey) }}</div>
+                <div :class="s.cardBadge">{{ $t(item.badgeKey) }}</div>
               </div>
             </div>
           </div>
@@ -50,35 +71,30 @@
     @opened:remove="it => hiddenPaths.delete(it.path)"
     />
     <footer :class="s.footer">
-      <span>Made with ❤️ on Vue 3</span>
+      <span>{{ $t('home.footer.caption') }}</span>
     </footer>
   </section>
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, onBeforeUnmount, reactive, computed} from 'vue'
+import {ref, onMounted, onBeforeUnmount, computed} from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import s from './HomePage.module.css'
 import { useCards } from '@/Pages/Home/Composables/useCards'
 import {useDragCards} from "@/Pages/Home/Composables/useDragCards";
 import DropDock from "@/components/DropDock/DropDock.vue";
+import { getAppConfig } from '@/shared/config/appConfig'
+import {
+  APP_MODE_PREVIEW_CHANGE_EVENT,
+  getEffectiveAppMode,
+} from '@/shared/config/appModePreview'
+import { featuredOptimizerTool, getHomeTools, isToolAvailable, type HomeTool } from '@/Pages/Home/config/toolsConfig'
+import type { AppMode } from '@/shared/types/appConfig'
 
-type GridItem = {
-  title: string
-  desc: string
-  path: string
-  icon: string
-  badge: string
-}
-
-const items = ref<GridItem[]>([
-  { title: 'All-in-One', desc: 'Все инструменты сразу', path: '/main',     icon: '🧰', badge: 'Starter' },
-  { title: 'Convert',    desc: 'Форматы, качество, ресайз', path: '/convert',   icon: '🔁', badge: 'Core' },
-  { title: 'Remove BG',  desc: 'Магия вырезания фона',      path: '/remove-bg', icon: '🪄', badge: 'Soon' },
-  { title: 'UpscalePage',desc: 'Резкость, апскейл, шум',    path: '/upscale',   icon: '✨', badge: 'Soon' },
-  { title: 'Translate',  desc: 'OCR + перевод',             path: '/translate', icon: '🌐', badge: 'Soon' },
-  { title: 'Pipeline',   desc: 'Сборки под задачу',         path: '/pipeline',  icon: '🧬', badge: 'Soon' },
-])
+const appConfig = getAppConfig()
+const featuredTool = featuredOptimizerTool
+const effectiveMode = ref<AppMode>(getEffectiveAppMode(appConfig.mode))
+const items = ref<HomeTool[]>(getHomeTools(effectiveMode.value))
 const dockRef = ref<InstanceType<typeof DropDock> | null>(null)
 const router = useRouter()
 const titleEl = ref<HTMLElement | null>(null)
@@ -88,6 +104,15 @@ const ready = ref(false)
 const gridRef = ref<HTMLElement|null>(null)
 
 const { setCardRef, setTiltRef, cardTilt, initCards, onCardClick, cleanup } = useCards(router, s)
+
+function onFeaturedClick(to: string) {
+  router.push(to)
+}
+
+function onToolClick(ev: MouseEvent, item: HomeTool) {
+  if (!isToolAvailable(item)) return
+  onCardClick(ev, item.path)
+}
 
 function getCardElByIndex(i: number) {
   const list = gridRef.value?.querySelectorAll(`.${s.cardMover}`) ?? []
@@ -114,8 +139,10 @@ const { dragging,onPointerDown: onCardPointerDown } = useDragCards({
   itemsRef: items,
   s,
   getDockRect: () => dockRef.value?.getZoneRect() ?? null,
-  dropToDock: (item) => dockRef.value?.add(item),
-  getItemByIndex: (i) => items.value[i],
+  dropToDock: (item) => {
+    if (item && isToolAvailable(item)) dockRef.value?.add(item)
+  },
+  getItemByIndex: (i) => visibleItems.value[i],
   onDragStart: () => dockRef.value?.show('drag'),
   onDragEnd:   () => dockRef.value?.hide(),
   onDropOutside: (index, el) => {
@@ -134,6 +161,10 @@ import JsonTranslatePage from '@/Pages/JsonTranslatePage/JsonTranslatePage.vue'
 
 const componentMap = {
   '/convert': ConvertPage,
+  '/compress': ConvertPage,
+  '/resize': ConvertPage,
+  '/convert-format': ConvertPage,
+  '/crop': ConvertPage,
   '/remove-bg': RemoveBgPage,
   '/upscale': UpscalePage,
   '/translate': JsonTranslatePage,
@@ -145,9 +176,27 @@ const visibleItems = computed(() =>
     items.value.filter(it => !hiddenPaths.value.has(it.path))
 )
 
+function syncHomeToolsForMode() {
+  effectiveMode.value = getEffectiveAppMode(appConfig.mode)
+  items.value = getHomeTools(effectiveMode.value)
+  hiddenPaths.value = new Set()
+  dockRef.value?.hide()
+
+  for (const opened of [...(dockRef.value?.opened ?? [])]) {
+    const currentTool = items.value.find((item) => item.path === opened.path)
+    if (currentTool && !isToolAvailable(currentTool)) {
+      dockRef.value?.remove(opened)
+    }
+  }
+}
+
 onMounted(() => {
   initCards(titleEl.value)
+  window.addEventListener(APP_MODE_PREVIEW_CHANGE_EVENT, syncHomeToolsForMode)
   requestAnimationFrame(() => (ready.value = true))
 })
-onBeforeUnmount(cleanup)
+onBeforeUnmount(() => {
+  window.removeEventListener(APP_MODE_PREVIEW_CHANGE_EVENT, syncHomeToolsForMode)
+  cleanup()
+})
 </script>

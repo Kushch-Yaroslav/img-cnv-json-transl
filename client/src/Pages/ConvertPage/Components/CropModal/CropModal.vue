@@ -5,9 +5,9 @@
         <header :class="s.header">
           <h3 :class="s.title">{{ file?.name }}</h3>
           <div :class="s.actions">
-            <button :class="s.btnGhost" @click="resetCrop" :disabled="!canReset">Сбросить область</button>
-            <button :class="s.btnGhost" @click="restoreOriginal" :disabled="!canRestore">Восстановить исходник</button>
-            <button :class="s.btnPrimary" @click="saveCrop" :disabled="!file">Сохранить</button>
+            <button :class="s.btnGhost" @click="resetCrop" :disabled="!canReset">{{ $t('cropModal.actions.resetArea') }}</button>
+            <button :class="s.btnGhost" @click="restoreOriginal" :disabled="!canRestore">{{ $t('cropModal.actions.restoreOriginal') }}</button>
+            <button :class="s.btnPrimary" @click="saveCrop" :disabled="!file">{{ $t('common.actions.save') }}</button>
             <button :class="s.btnClose" @click="close">×</button>
           </div>
         </header>
@@ -25,47 +25,61 @@
         </div>
 
         <div :class="s.shapeRow">
-          <span :class="s.shapeLabel">Форма:</span>
+          <span :class="s.shapeLabel">{{ $t('cropModal.shape.label') }}</span>
           <button
               type="button"
               :class="[s.shapeBtn, shape === 'rect' && s.shapeBtnActive]"
               @click="shape = 'rect'"
           >
-            Прямоугольник
+            {{ $t('cropModal.shape.rectangle') }}
           </button>
           <button
               type="button"
               :class="[s.shapeBtn, shape === 'circle' && s.shapeBtnActive]"
               @click="shape = 'circle'"
           >
-            Круг
+            {{ $t('cropModal.shape.circle') }}
           </button>
         </div>
 
-        <div :class="s.stage" @mousedown="onDown" @touchstart.prevent="onDownTouch">
-          <canvas ref="canvas" :class="s.canvas"></canvas>
-          <div :class="s.mask">
-            <div
-                :class="[s.cropRect, shape === 'circle' && s.cropCircle]"
-                :style="cropStyle"
-                @mousedown.stop="onRectDown"
-                @touchstart.stop.prevent="onRectDownTouch"
-            >
-              <div
-                  v-for="h in handles"
-                  :key="h"
-                  :data-handle="h"
-                  :class="[s.handle, s['h_'+h]]"
-                  @mousedown.stop="onHandleDown"
-                  @touchstart.stop.prevent="onHandleDownTouch"
-              />
+        <div :class="s.body">
+          <section :class="s.editorPanel">
+            <div ref="stageViewport" :class="s.stageViewport">
+              <div :class="s.stage">
+                <canvas ref="canvas" :class="s.canvas"></canvas>
+                <div :class="s.mask">
+                  <div
+                      :class="[s.cropRect, shape === 'circle' && s.cropCircle]"
+                      :style="cropStyle"
+                      @pointerdown.stop.prevent="onRectDown"
+                  >
+                    <div
+                        v-for="h in handles"
+                        :key="h"
+                        :data-handle="h"
+                        :class="[s.handle, s['h_'+h]]"
+                        @pointerdown.stop.prevent="onHandleDown"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </section>
+
+          <aside :class="s.previewPanel">
+            <div :class="s.previewHeader">
+              <h4 :class="s.previewTitle">{{ $t('cropModal.preview.title') }}</h4>
+              <p :class="s.previewHint">{{ $t('cropModal.preview.hint') }}</p>
+            </div>
+            <div :class="s.previewViewport">
+              <canvas ref="previewCanvas" :class="s.previewCanvas"></canvas>
+            </div>
+          </aside>
         </div>
 
 
         <footer :class="s.footer">
-          <div :class="s.hint">Тяни рамку или углы. Область всегда внутри изображения.</div>
+          <div :class="s.hint">{{ $t('cropModal.hint') }}</div>
         </footer>
       </div>
     </div>
@@ -77,8 +91,10 @@
 type Shape = 'rect' | 'circle'
 
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import s from './CropModal.module.css'
 
+const { t } = useI18n()
 const shape = ref<Shape>('rect')
 
 const props = defineProps<{
@@ -91,7 +107,7 @@ type RatioKey = 'free' | '1:1' | '4:3' | '3:2' | '16:9' | '21:9'| '3:4'
 
 const ratio = ref<RatioKey>('free')
 const ratioOptions = [
-  { key: 'free' as RatioKey, label: 'Свободно' },
+  { key: 'free' as RatioKey, label: t('cropModal.ratio.free') },
   { key: '1:1' as RatioKey, label: '1:1' },
   { key: '4:3' as RatioKey, label: '4:3' },
   { key: '3:4' as RatioKey, label: '3:4' },
@@ -141,10 +157,14 @@ const emit = defineEmits<{
 }>()
 
 const canvas = ref<HTMLCanvasElement|null>(null)
+const previewCanvas = ref<HTMLCanvasElement|null>(null)
+const stageViewport = ref<HTMLElement|null>(null)
 const bmp = ref<ImageBitmap|null>(null)
+let stageResizeObserver: ResizeObserver | null = null
 
 const view = ref({ // viewport рисования (в CSS px)
-  w: 920, h: 520, scale: 1,
+  w: 0, h: 0, scale: 1,
+  offsetX: 0, offsetY: 0,
   imgW: 0, imgH: 0, // реальные пиксели исходника
 })
 
@@ -156,11 +176,40 @@ const handles = ['nw','n','ne','e','se','s','sw','w'] as const
 const canRestore = computed(() => !!props.file)
 const canReset = computed(() => crop.value.w > 0 && crop.value.h > 0)
 
-function close(){ emit('close') }
+type IdleInteraction = { mode: 'idle' }
+type MoveInteraction = {
+  mode: 'move'
+  pointerId: number
+  lastX: number
+  lastY: number
+  captureEl: HTMLElement | null
+}
+type ResizeInteraction = {
+  mode: 'resize'
+  pointerId: number
+  handle: string
+  startX: number
+  startY: number
+  cx: number
+  cy: number
+  cw: number
+  ch: number
+  captureEl: HTMLElement | null
+}
+
+type InteractionState = IdleInteraction | MoveInteraction | ResizeInteraction
+
+let interaction: InteractionState = { mode: 'idle' }
+
+function close() {
+  cleanupInteraction()
+  emit('close')
+}
 
 // загрузка битмапа
 async function loadBitmap() {
   if (!props.file) return
+  if (bmp.value) bmp.value.close()
   // избегаем авто-ориентации браузера — пусть как есть
   bmp.value = await createImageBitmap(props.file)
   view.value.imgW = bmp.value.width
@@ -168,17 +217,7 @@ async function loadBitmap() {
 
   // подгоним viewport под канвас
   await nextTick()
-  const el = canvas.value!
-  const dpr = window.devicePixelRatio || 1
-  const rect = el.getBoundingClientRect()
-  el.width = Math.round(rect.width * dpr)
-  el.height = Math.round(rect.height * dpr)
-  const ctx = el.getContext('2d')!
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-
-  // масштаб, чтобы целиком влезло
-  const scale = Math.min(rect.width / view.value.imgW, rect.height / view.value.imgH)
-  view.value.scale = scale
+  remeasureStage()
 
   // дефолтный crop: квадрат вписанный
   const vw = view.value.imgW
@@ -189,77 +228,274 @@ async function loadBitmap() {
   draw()
 }
 
+function remeasureStage() {
+  const viewportEl = stageViewport.value
+  const el = canvas.value
+  if (!viewportEl || !el || !bmp.value) return
+
+  const rect = viewportEl.getBoundingClientRect()
+  if (!rect.width || !rect.height) return
+
+  const dpr = window.devicePixelRatio || 1
+  el.width = Math.round(rect.width * dpr)
+  el.height = Math.round(rect.height * dpr)
+  const ctx = el.getContext('2d')!
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+  const scale = Math.min(rect.width / view.value.imgW, rect.height / view.value.imgH)
+  const drawW = view.value.imgW * scale
+  const drawH = view.value.imgH * scale
+
+  view.value.w = rect.width
+  view.value.h = rect.height
+  view.value.scale = scale
+  view.value.offsetX = Math.round((rect.width - drawW) / 2)
+  view.value.offsetY = Math.round((rect.height - drawH) / 2)
+}
+
 function draw() {
   if (!canvas.value || !bmp.value) return
   const el = canvas.value
   const ctx = el.getContext('2d')!
-  const rect = el.getBoundingClientRect()
-  ctx.clearRect(0,0,rect.width,rect.height)
+  ctx.clearRect(0,0,view.value.w,view.value.h)
   const s = view.value.scale
-  ctx.drawImage(bmp.value, 0, 0, view.value.imgW*s, view.value.imgH*s)
+  ctx.drawImage(
+      bmp.value,
+      view.value.offsetX,
+      view.value.offsetY,
+      view.value.imgW * s,
+      view.value.imgH * s
+  )
+  drawPreview()
 }
 
 const cropStyle = computed(() => {
   const s = view.value.scale
-  const x = crop.value.x * s
-  const y = crop.value.y * s
+  const x = view.value.offsetX + crop.value.x * s
+  const y = view.value.offsetY + crop.value.y * s
   const w = crop.value.w * s
   const h = crop.value.h * s
   return { transform: `translate(${x}px, ${y}px)`, width: `${w}px`, height: `${h}px` }
 })
+
+function drawPreview() {
+  if (!previewCanvas.value || !bmp.value) return
+
+  const canvasEl = previewCanvas.value
+  const rect = canvasEl.getBoundingClientRect()
+  if (!rect.width || !rect.height) return
+
+  const dpr = window.devicePixelRatio || 1
+  canvasEl.width = Math.round(rect.width * dpr)
+  canvasEl.height = Math.round(rect.height * dpr)
+  const ctx = canvasEl.getContext('2d')!
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+  ctx.clearRect(0, 0, rect.width, rect.height)
+
+  let sx = crop.value.x
+  let sy = crop.value.y
+  let sw = crop.value.w
+  let sh = crop.value.h
+
+  if (!sw || !sh) return
+
+  if (shape.value === 'circle') {
+    const side = Math.min(sw, sh)
+    sx = sx + (sw - side) / 2
+    sy = sy + (sh - side) / 2
+    sw = side
+    sh = side
+  }
+
+  const scale = Math.min(rect.width / sw, rect.height / sh)
+  const drawW = sw * scale
+  const drawH = sh * scale
+  const offsetX = (rect.width - drawW) / 2
+  const offsetY = (rect.height - drawH) / 2
+
+  if (shape.value === 'circle') {
+    const radius = Math.min(drawW, drawH) / 2
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(rect.width / 2, rect.height / 2, radius, 0, Math.PI * 2)
+    ctx.closePath()
+    ctx.clip()
+  }
+
+  ctx.drawImage(
+      bmp.value,
+      sx, sy, sw, sh,
+      offsetX, offsetY, drawW, drawH
+  )
+
+  if (shape.value === 'circle') {
+    ctx.restore()
+  }
+}
 
 watch(() => props.file, async () => {
   if (!props.open || !props.file) return
   await loadBitmap()
 })
 watch(() => props.open, async (v) => {
-  if (v && props.file) await loadBitmap()
+  if (!v) {
+    cleanupInteraction()
+    return
+  }
+
+  await nextTick()
+
+  if (stageResizeObserver && stageViewport.value) {
+    stageResizeObserver.disconnect()
+    stageResizeObserver.observe(stageViewport.value)
+  }
+
+  if (props.file) await loadBitmap()
 })
+watch([crop, shape], () => {
+  drawPreview()
+}, { deep: true })
 
 onMounted(() => {
-  window.addEventListener('resize', draw)
+  if (typeof ResizeObserver !== 'undefined') {
+    stageResizeObserver = new ResizeObserver(() => {
+      remeasureStage()
+      draw()
+    })
+
+    if (stageViewport.value) {
+      stageResizeObserver.observe(stageViewport.value)
+    }
+  }
 })
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', draw)
+  cleanupInteraction()
+  stageResizeObserver?.disconnect()
+  stageResizeObserver = null
   if (bmp.value) bmp.value.close()
 })
 
-/* --- Перемещение рамки --- */
-let dragStart: {x:number,y:number}|null = null
-function onRectDown(e: MouseEvent) {
-  dragStart = { x: e.clientX, y: e.clientY }
-  window.addEventListener('mousemove', onRectMove)
-  window.addEventListener('mouseup', onRectUp, { once: true })
+function isPrimaryPointer(event: PointerEvent) {
+  return event.pointerType !== 'mouse' || event.button === 0
 }
-function onRectMove(e: MouseEvent) {
-  if (!dragStart) return
-  const dx = (e.clientX - dragStart.x) / view.value.scale
-  const dy = (e.clientY - dragStart.y) / view.value.scale
-  moveCrop(dx, dy)
-  dragStart = { x: e.clientX, y: e.clientY }
+
+function bindInteractionListeners() {
+  window.addEventListener('pointermove', onPointerMove)
+  window.addEventListener('pointerup', onPointerUp)
+  window.addEventListener('pointercancel', onPointerCancel)
+  window.addEventListener('blur', onWindowBlur)
 }
-function onRectUp() {
-  dragStart = null
-  window.removeEventListener('mousemove', onRectMove)
+
+function releaseInteractionCapture(state: InteractionState) {
+  if (state.mode === 'idle' || !state.captureEl) return
+
+  try {
+    if (state.captureEl.hasPointerCapture?.(state.pointerId)) {
+      state.captureEl.releasePointerCapture(state.pointerId)
+    }
+  } catch {
+    // ignore release errors during teardown
+  }
 }
-function onRectDownTouch(e: TouchEvent) {
-  const t = e.touches[0]
-  dragStart = { x: t.clientX, y: t.clientY }
-  window.addEventListener('touchmove', onRectMoveTouch, { passive: false })
-  window.addEventListener('touchend', onRectUpTouch, { once: true })
+
+function cleanupInteraction() {
+  window.removeEventListener('pointermove', onPointerMove)
+  window.removeEventListener('pointerup', onPointerUp)
+  window.removeEventListener('pointercancel', onPointerCancel)
+  window.removeEventListener('blur', onWindowBlur)
+  releaseInteractionCapture(interaction)
+  interaction = { mode: 'idle' }
 }
-function onRectMoveTouch(e: TouchEvent) {
-  e.preventDefault()
-  if (!dragStart) return
-  const t = e.touches[0]
-  const dx = (t.clientX - dragStart.x) / view.value.scale
-  const dy = (t.clientY - dragStart.y) / view.value.scale
-  moveCrop(dx, dy)
-  dragStart = { x: t.clientX, y: t.clientY }
+
+function startMoveInteraction(event: PointerEvent) {
+  cleanupInteraction()
+
+  const captureEl = event.currentTarget instanceof HTMLElement ? event.currentTarget : null
+  try {
+    captureEl?.setPointerCapture?.(event.pointerId)
+  } catch {
+    // ignore capture errors and keep window listeners as fallback
+  }
+
+  interaction = {
+    mode: 'move',
+    pointerId: event.pointerId,
+    lastX: event.clientX,
+    lastY: event.clientY,
+    captureEl,
+  }
+  bindInteractionListeners()
 }
-function onRectUpTouch() {
-  dragStart = null
-  window.removeEventListener('touchmove', onRectMoveTouch)
+
+function startResizeInteraction(event: PointerEvent, handleName: string) {
+  cleanupInteraction()
+
+  const captureEl = event.currentTarget instanceof HTMLElement ? event.currentTarget : null
+  try {
+    captureEl?.setPointerCapture?.(event.pointerId)
+  } catch {
+    // ignore capture errors and keep window listeners as fallback
+  }
+
+  interaction = {
+    mode: 'resize',
+    pointerId: event.pointerId,
+    handle: handleName,
+    startX: event.clientX,
+    startY: event.clientY,
+    cx: crop.value.x,
+    cy: crop.value.y,
+    cw: crop.value.w,
+    ch: crop.value.h,
+    captureEl,
+  }
+  bindInteractionListeners()
+}
+
+function onRectDown(event: PointerEvent) {
+  if (!isPrimaryPointer(event)) return
+  startMoveInteraction(event)
+}
+
+function onHandleDown(event: PointerEvent) {
+  if (!isPrimaryPointer(event)) return
+  const handleName = (event.currentTarget as HTMLElement | null)?.dataset.handle
+  if (!handleName) return
+  startResizeInteraction(event, handleName)
+}
+
+function onPointerMove(event: PointerEvent) {
+  if (interaction.mode === 'idle' || event.pointerId !== interaction.pointerId) return
+
+  if (interaction.mode === 'move') {
+    const dx = (event.clientX - interaction.lastX) / view.value.scale
+    const dy = (event.clientY - interaction.lastY) / view.value.scale
+    moveCrop(dx, dy)
+    interaction = {
+      ...interaction,
+      lastX: event.clientX,
+      lastY: event.clientY,
+    }
+    return
+  }
+
+  const dx = (event.clientX - interaction.startX) / view.value.scale
+  const dy = (event.clientY - interaction.startY) / view.value.scale
+  resizeFromHandle(interaction.handle, dx, dy, interaction)
+}
+
+function onPointerUp(event: PointerEvent) {
+  if (interaction.mode === 'idle' || event.pointerId !== interaction.pointerId) return
+  cleanupInteraction()
+}
+
+function onPointerCancel(event: PointerEvent) {
+  if (interaction.mode === 'idle' || event.pointerId !== interaction.pointerId) return
+  cleanupInteraction()
+}
+
+function onWindowBlur() {
+  cleanupInteraction()
 }
 
 function moveCrop(dx:number, dy:number) {
@@ -270,48 +506,13 @@ function moveCrop(dx:number, dy:number) {
 }
 
 /* --- Ресайз рамки за ручки --- */
-let handle: string|undefined
-let start: {x:number,y:number,cx:number,cy:number,cw:number,ch:number}|null = null
-
-function onHandleDown(e: MouseEvent) {
-  handle = (e.currentTarget as HTMLElement).dataset.handle
-  start = { x:e.clientX, y:e.clientY, cx:crop.value.x, cy:crop.value.y, cw:crop.value.w, ch:crop.value.h }
-  window.addEventListener('mousemove', onHandleMove)
-  window.addEventListener('mouseup', onHandleUp, { once: true })
-}
-function onHandleMove(e: MouseEvent) {
-  if (!start || !handle) return
-  const dx = (e.clientX - start.x) / view.value.scale
-  const dy = (e.clientY - start.y) / view.value.scale
-  resizeFromHandle(handle, dx, dy)
-}
-function onHandleUp() {
-  start = null
-  handle = undefined
-  window.removeEventListener('mousemove', onHandleMove)
-}
-function onHandleDownTouch(e: TouchEvent) {
-  handle = (e.currentTarget as HTMLElement).dataset.handle
-  const t = e.touches[0]
-  start = { x:t.clientX, y:t.clientY, cx:crop.value.x, cy:crop.value.y, cw:crop.value.w, ch:crop.value.h }
-  window.addEventListener('touchmove', onHandleMoveTouch, { passive:false })
-  window.addEventListener('touchend', onHandleUpTouch, { once:true })
-}
-function onHandleMoveTouch(e: TouchEvent) {
-  e.preventDefault()
-  if (!start || !handle) return
-  const t = e.touches[0]
-  const dx = (t.clientX - start.x) / view.value.scale
-  const dy = (t.clientY - start.y) / view.value.scale
-  resizeFromHandle(handle, dx, dy)
-}
-function onHandleUpTouch() {
-  start = null; handle = undefined
-  window.removeEventListener('touchmove', onHandleMoveTouch)
-}
-
-function resizeFromHandle(h:string, dx:number, dy:number) {
-  let { cx, cy, cw, ch } = start!
+function resizeFromHandle(
+    h: string,
+    dx: number,
+    dy: number,
+    startState: Pick<ResizeInteraction, 'cx' | 'cy' | 'cw' | 'ch'>
+) {
+  let { cx, cy, cw, ch } = startState
   let nx = cx, ny = cy, nw = cw, nh = ch
 
   if (ratio.value === 'free') {
@@ -365,11 +566,6 @@ function resizeFromHandle(h:string, dx:number, dy:number) {
 
   crop.value = { x: Math.round(nx), y: Math.round(ny), w: Math.round(nw), h: Math.round(nh) }
 }
-
-function onDown(e: MouseEvent) {
-  // фокус на stage (для будущих хоткеев), пока не нужен
-}
-function onDownTouch(){}
 
 function clamp(v:number, min:number, max:number){ return Math.max(min, Math.min(max, v)) }
 
@@ -460,7 +656,6 @@ function inferMime(file: File) {
 
 function restoreOriginal() {
   emit('restore')
-  close()
 }
 
 watch(() => props.open, (v) => {
@@ -469,11 +664,13 @@ watch(() => props.open, (v) => {
     document.body.dataset.prevOverflow = prev
     document.body.style.overflow = 'hidden'
   } else {
+    cleanupInteraction()
     const prev = document.body.dataset.prevOverflow ?? ''
     document.body.style.overflow = prev
   }
 })
 onBeforeUnmount(() => {
+  cleanupInteraction()
   // на всякий случай восстановим
   const prev = document.body.dataset.prevOverflow ?? ''
   document.body.style.overflow = prev

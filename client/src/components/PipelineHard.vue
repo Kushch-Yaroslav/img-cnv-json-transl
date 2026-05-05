@@ -1,9 +1,9 @@
 <template>
   <div class="panel">
-    <h2>Конвейер 1080×1080 → RemoveBG → WebP(85)</h2>
+    <h2>{{ $t('pipeline.title') }}</h2>
 
     <DropZone @picked="onPicked" />
-    <div v-if="files.length" class="muted">Файлов: {{ files.length }}</div>
+    <div v-if="files.length" class="muted">{{ $t('pipeline.stats.files') }} {{ files.length }}</div>
 
     <div v-if="files.length" class="preview-grid" style="margin-top:12px">
       <div class="thumb" v-for="f in files" :key="f.name">
@@ -16,20 +16,22 @@
     </div>
 
     <div style="margin-top:12px">
-      <button :disabled="busy || !files.length" @click="run">Запустить конвейер (ZIP)</button>
+      <button :disabled="busy || !files.length" @click="run">{{ $t('pipeline.actions.submit') }}</button>
       <span class="muted" style="margin-left:8px">{{ status }}</span>
     </div>
 
     <div class="muted" style="margin-top:8px">
-      Шаги: resize до 1080×1080 (fit: inside, без увеличения) → удаление фона (AI) → WebP (quality 85, minSize, smartSubsample) → удаление метаданных.
+      {{ $t('pipeline.description.steps') }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onBeforeUnmount } from 'vue'
+import { useI18n } from 'vue-i18n'
 import DropZone from "@/Shared/Components/DropZone.vue";
 
+const { t } = useI18n()
 const files = ref<File[]>([])
 const urls = ref(new Map<File, string>())
 const busy = ref(false)
@@ -55,7 +57,7 @@ async function run() {
   try {
     if (!files.value.length) return
     busy.value = true
-    status.value = 'Обработка…'
+    status.value = t('common.status.processing')
 
     const fd = new FormData()
     for (const f of files.value) fd.append('files', f)
@@ -63,7 +65,7 @@ async function run() {
     const resp = await fetch('/pipeline/hard', { method: 'POST', body: fd })
     if (!resp.ok) {
       const text = await resp.text().catch(() => '')
-      throw new Error(text || 'pipeline error')
+      throw new Error(text || t('pipeline.errors.batchFailedFallback'))
     }
 
     const blob = await resp.blob()
@@ -73,10 +75,10 @@ async function run() {
     a.download = 'pipeline_1080_webp.zip'
     a.click()
     URL.revokeObjectURL(u)
-    status.value = 'Готово ✔'
+    status.value = t('common.status.success')
   } catch (e:any) {
     console.error(e)
-    status.value = e?.message || 'Ошибка :('
+    status.value = e?.message || t('common.status.errorGeneric')
   } finally {
     busy.value = false
   }

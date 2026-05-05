@@ -1,9 +1,10 @@
 import { reactive } from 'vue'
+import type { ConvertOptions, MultiResizeMode } from '@/shared/types/image'
 
-export type MultiMode = 'switch' | 'add'
+export type MultiMode = MultiResizeMode
 
-export function useOptions<T extends Record<string, any>>(initial?: Partial<T>) {
-    const defaults: Record<string, any> = {
+export function useOptions<T extends ConvertOptions = ConvertOptions>(initial?: Partial<T>) {
+    const defaults: ConvertOptions = {
         outputFormat: 'same',
         resize: false,
         maxWidth: undefined,
@@ -22,11 +23,11 @@ export function useOptions<T extends Record<string, any>>(initial?: Partial<T>) 
 
         // мульти-ресайз
         multiResize: false,
-        variants: [] as Array<{ w?: number; h?: number }>,
+        variants: [],
         multiMode: 'switch' as MultiMode, // NEW: 'switch' | 'add'
         inFolders: false,
     }
 
-    const opts = reactive<T>({ ...(defaults as T), ...(initial as T) })
+    const opts = reactive<T>({ ...defaults, ...(initial as T) } as T)
     return { opts }
 }

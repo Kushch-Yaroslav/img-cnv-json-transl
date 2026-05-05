@@ -5,7 +5,7 @@
       <div v-for="it in opened" :key="it.path" :class="s.card">
         <header :class="s.cardHead">
           <span :class="s.cardIcon">{{ it.icon }}</span>
-          <strong :class="s.cardTitle">{{ it.title }}</strong>
+          <strong :class="s.cardTitle">{{ $t(it.titleKey) }}</strong>
           <button :class="s.close" @click="remove(it)">✕</button>
         </header>
 
@@ -13,7 +13,11 @@
           <!-- реальный компонент страницы -->
           <Suspense>
             <KeepAlive>
-              <component :is="componentMap[it.path]" />
+              <component
+                  :is="componentMap[it.path]"
+                  :key="it.path"
+                  v-bind="getComponentProps(it)"
+              />
             </KeepAlive>
           </Suspense>
         </div>
@@ -24,20 +28,28 @@
     <transition name="dock">
       <div v-if="visible" ref="zone" :class="[s.zone, { [s.zoneArmed]: armed }]">
         <div :class="s.zoneGlow" />
-        <div :class="s.zoneLabel">Перетащите сюда карточку</div>
+        <div :class="s.zoneLabel">{{ $t('dock.dropZone.label') }}</div>
       </div>
     </transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, type Component } from 'vue'
 import s from './DropDock.module.css'
+import type { OptimizerMode } from '@/Pages/Home/config/toolsConfig'
 
-export type DockItem = { title: string; desc: string; path: string; icon: string; badge: string }
+export type DockItem = {
+  titleKey: string
+  descKey: string
+  path: string
+  icon: string
+  badgeKey: string
+  optimizerMode?: OptimizerMode
+}
 
 const props = defineProps<{
-  componentMap: Record<string, any>   // path -> компонент страницы
+  componentMap: Record<string, Component>   // path -> компонент страницы
 }>()
 
 const opened = reactive<DockItem[]>([])
@@ -48,6 +60,10 @@ const zone = ref<HTMLElement|null>(null)
 function show(from: 'hover'|'drag' = 'hover') { visible.value = true; armed.value = from === 'drag' }
 function hide() { visible.value = false; armed.value = false }
 function getZoneRect() { return zone.value?.getBoundingClientRect() ?? null }
+
+function getComponentProps(item: DockItem) {
+  return item.optimizerMode ? { optimizerMode: item.optimizerMode } : {}
+}
 
 const emit = defineEmits<{
   'opened:add': [DockItem],

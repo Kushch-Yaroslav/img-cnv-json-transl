@@ -2,9 +2,9 @@
   <section :class="[s.wrap, ready && s.ready]">
     <div :class="s.container">
       <header :class="s.header">
-        <h1 :class="s.title">Image <span :class="s.accent">Tools</span> — Convert</h1>
+        <h1 :class="s.title">{{ $t(`convert.mode.${modeKey}.titleStart`) }} <span :class="s.accent">{{ $t(`convert.mode.${modeKey}.titleAccent`) }}</span></h1>
         <p :class="s.subtitle">
-          Конвертируй и оптимизируй изображения мгновенно. Красиво. Удобно. Быстро.
+          {{ $t(`convert.mode.${modeKey}.subtitle`) }}
         </p>
       </header>
 
@@ -12,9 +12,12 @@
         <DropZone @picked="onPicked" />
       </div>
 
-      <div v-if="files.length" :class="s.stats">
-        <div :class="s.badge">Файлов: <strong>{{ files.length }}</strong></div>
-        <div :class="s.badge">Суммарно: <strong>{{ totalSize }}</strong></div>
+      <div v-if="files.length || showSourceCounter" :class="s.stats">
+        <div v-if="files.length" :class="s.badge">{{ $t('convert.stats.files') }} <strong>{{ files.length }}</strong></div>
+        <div v-if="files.length" :class="s.badge">{{ $t('convert.stats.totalSize') }} <strong>{{ totalSize }}</strong></div>
+        <div v-if="showSourceCounter" :class="[s.badge, sourceLimitExceeded && s.badgeWarn]">
+          {{ $t('convert.stats.sourceImages') }} <strong>{{ sourceCounterText }}</strong>
+        </div>
       </div>
 
       <div :class="s.grid">
@@ -34,15 +37,15 @@
           />        </div>
 
         <div :class="s.card">
-          <OptionsPanel v-model="opts">
+          <OptionsPanel v-model="opts" :mode="optimizerMode" :app-mode="effectiveAppMode">
 
             <div :class="s.actions">
               <button
                   :class="s.btnPrimary"
                   :disabled="busy || !files.length"
-                  @click="convert"
+                  @click="runConvert"
               >
-                {{ busy ? 'Конвертирую…' : 'Конвертировать' }}
+                {{ busy ? $t('convert.actions.processing') : $t('convert.actions.submit') }}
               </button>
               <button
                   type="button"
@@ -50,7 +53,7 @@
                   :disabled="!files.length || busy"
                   @click="clearFiles"
               >
-                Очистить файлы
+                {{ $t('common.actions.clearFiles') }}
               </button>
               <span :class="[s.muted, s.status]">{{ status }}</span>
             </div>
@@ -62,9 +65,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute } from 'vue-router'
 import DropZone from '@/Shared/Components/DropZone.vue'
 
+import { useI18n } from 'vue-i18n'
 import {UFile, useFiles} from '@/Pages/ConvertPage/Composables/useFiles'
 import { useOptions } from '@/Pages/ConvertPage/Composables/useOptions'
 import { useConvert } from '@/Pages/ConvertPage/Composables/useConvert'
@@ -73,8 +78,47 @@ import s from './ConvertPage.module.css'
 import PreviewGrid from "@/Pages/ConvertPage/Components/PreviewGrid/PreviewGrid.vue";
 import OptionsPanel, {OptionsModel} from "@/Pages/ConvertPage/Components/OptionsPanel/OptionsPanel.vue";
 import CropModal from "@/Pages/ConvertPage/Components/CropModal/CropModal.vue";
+import { getAppConfig } from '@/shared/config/appConfig'
+import type { OptimizerMode } from '@/Pages/Home/config/toolsConfig'
+import {
+  APP_MODE_PREVIEW_CHANGE_EVENT,
+  getEffectiveAppMode,
+} from '@/shared/config/appModePreview'
+
+const { t } = useI18n()
+
+const modeKeyMap: Record<string, string> = {
+  'all-in-one': 'allInOne',
+  'compress': 'compress',
+  'resize': 'resize',
+  'format': 'format',
+  'crop': 'crop'
+}
+
+const modeKey = computed(() => {
+  const mode = optimizerMode.value
+  return modeKeyMap[mode] || mode
+})
 
 const ready = ref(false)
+const route = useRoute()
+const appConfig = getAppConfig()
+const effectiveAppMode = ref(getEffectiveAppMode(appConfig.mode))
+const props = defineProps<{
+  optimizerMode?: OptimizerMode
+}>()
+
+const optimizerModes: OptimizerMode[] = ['all-in-one', 'compress', 'resize', 'format', 'crop']
+const optimizerMode = computed<OptimizerMode>(() => {
+  if (props.optimizerMode && optimizerModes.includes(props.optimizerMode)) {
+    return props.optimizerMode
+  }
+
+  const mode = route.meta.optimizerMode
+  return typeof mode === 'string' && optimizerModes.includes(mode as OptimizerMode)
+      ? mode as OptimizerMode
+      : 'all-in-one'
+})
 
 const { items, files, onPicked, clearFiles, totalSize,
   removeById, replaceById, restoreById } = useFiles()
@@ -101,8 +145,64 @@ function restoreOriginal() {
 const { opts } = useOptions<OptionsModel>()
 const { busy, status, convert } = useConvert<OptionsModel>({ files, opts })
 
+const usedSourceImagesCount = ref(0)
+const pendingSourceImagesCount = computed(() => files.value.length)
+const showSourceCounter = computed(() => effectiveAppMode.value === 'free')
+const sourceImagesLimit = computed<number | null>(() => {
+  if (!showSourceCounter.value) return null
+  return optimizerMode.value === 'all-in-one' ? 5 : 20
+})
+const sourceLimitExceeded = computed(() =>
+    sourceImagesLimit.value !== null &&
+    usedSourceImagesCount.value + pendingSourceImagesCount.value > sourceImagesLimit.value
+)
+const sourceCounterText = computed(() => {
+  const limit = sourceImagesLimit.value
+  if (limit === null) return ''
+  const pending = pendingSourceImagesCount.value
+  const used = usedSourceImagesCount.value
+  return pending > 0 ? `${used}(+${pending})/${limit}` : `${used}/${limit}`
+})
+const resizeFreeMultiResizeVariantCount = computed(() =>
+    Array.isArray(opts.variants)
+        ? opts.variants.filter((variant) => (variant.w && variant.w > 0) || (variant.h && variant.h > 0)).length
+        : 0
+)
+
+async function runConvert() {
+  if (
+      effectiveAppMode.value === 'free' &&
+      (optimizerMode.value === 'resize' || optimizerMode.value === 'all-in-one') &&
+      opts.multiResize
+  ) {
+    if (resizeFreeMultiResizeVariantCount.value > 10) {
+      status.value = t('convert.limits.freeResizeMultiSelectedSizes', { count: 10 })
+      return
+    }
+  }
+
+  if (sourceLimitExceeded.value) {
+    status.value = t('convert.limits.freeLimitExceeded', { count: sourceImagesLimit.value })
+    return
+  }
+  const pending = pendingSourceImagesCount.value
+  const converted = await convert()
+  if (converted && showSourceCounter.value) {
+    usedSourceImagesCount.value += pending
+  }
+}
+
+function syncAppMode() {
+  effectiveAppMode.value = getEffectiveAppMode(appConfig.mode)
+}
+
 onMounted(() => {
+  window.addEventListener(APP_MODE_PREVIEW_CHANGE_EVENT, syncAppMode)
   requestAnimationFrame(() => (ready.value = true))
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener(APP_MODE_PREVIEW_CHANGE_EVENT, syncAppMode)
 })
 </script>
 

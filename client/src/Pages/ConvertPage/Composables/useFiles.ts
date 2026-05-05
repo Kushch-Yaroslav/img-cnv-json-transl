@@ -1,11 +1,7 @@
 import { computed, ref } from 'vue'
+import type { ImageFileItem } from '@/shared/types/files'
 
-export type UFile = {
-    id: string
-    original: File
-    current: File
-    cropped: boolean
-}
+export type UFile = ImageFileItem
 
 function uid() {
     return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
