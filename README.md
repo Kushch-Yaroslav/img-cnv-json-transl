@@ -107,3 +107,11 @@ npm --prefix client/client run preview
 - Desktop packaging is planned but not implemented yet.
 - Free/Pro modes are not security features and should not be treated as entitlement enforcement.
 - Some advanced tools are experimental and intended for local/development use while the product direction is being refined.
+
+## Demo
+
+### Main UI
+![Main UI](client/public/screendemo1.png)
+
+### Processing Example
+![Processing Example](client/public/screendemo2.png)
