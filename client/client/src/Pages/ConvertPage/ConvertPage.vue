@@ -163,8 +163,24 @@ const sourceCounterText = computed(() => {
   const used = usedSourceImagesCount.value
   return pending > 0 ? `${used}(+${pending})/${limit}` : `${used}/${limit}`
 })
+const resizeFreeMultiResizeVariantCount = computed(() =>
+    Array.isArray(opts.variants)
+        ? opts.variants.filter((variant) => (variant.w && variant.w > 0) || (variant.h && variant.h > 0)).length
+        : 0
+)
 
 async function runConvert() {
+  if (
+      effectiveAppMode.value === 'free' &&
+      (optimizerMode.value === 'resize' || optimizerMode.value === 'all-in-one') &&
+      opts.multiResize
+  ) {
+    if (resizeFreeMultiResizeVariantCount.value > 10) {
+      status.value = t('convert.limits.freeResizeMultiSelectedSizes', { count: 10 })
+      return
+    }
+  }
+
   if (sourceLimitExceeded.value) {
     status.value = t('convert.limits.freeLimitExceeded', { count: sourceImagesLimit.value })
     return

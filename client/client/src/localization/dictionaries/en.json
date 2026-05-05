@@ -114,7 +114,10 @@
       "processing": "Converting..."
     },
     "limits": {
-      "freeLimitExceeded": "Free limit: {count} source images"
+      "freeLimitExceeded": "Free limit: {count} source images",
+      "freeResizeMultiSourceImage": "Free multi-size allows only 1 source image",
+      "freeResizeMultiOutputSizes": "Free multi-size allows up to {count} output sizes",
+      "freeResizeMultiSelectedSizes": "Free multi-size allows up to {count} selected sizes"
     },
     "options": {
       "outputFormat": {
@@ -130,6 +133,7 @@
       "multiResize": {
         "toggle": "Multi-sizes",
         "addVariant": "+ Add size",
+        "selectedSizes": "Selected sizes:",
         "modeLabel": "Sets mode",
         "mode": {
           "switch": "Switch",
@@ -176,7 +180,11 @@
     "ratio": {
       "free": "Free"
     },
-    "hint": "Drag frame or corners. Area is always inside the image."
+    "hint": "Drag frame or corners. Area is always inside the image.",
+    "preview": {
+      "title": "Live preview",
+      "hint": "Preview updates while you move or resize the crop."
+    }
   },
   "previewGrid": {
     "remove": { "title": "Remove" },

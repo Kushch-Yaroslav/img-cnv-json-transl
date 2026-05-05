@@ -114,7 +114,10 @@
       "processing": "Conversione..."
     },
     "limits": {
-      "freeLimitExceeded": "Limite modalità gratis: {count} immagini sorgente"
+      "freeLimitExceeded": "Limite modalità gratis: {count} immagini sorgente",
+      "freeResizeMultiSourceImage": "Il multi-size gratuito consente solo 1 immagine sorgente",
+      "freeResizeMultiOutputSizes": "Il multi-size gratuito consente fino a {count} dimensioni di output",
+      "freeResizeMultiSelectedSizes": "Il multi-size gratuito consente fino a {count} dimensioni selezionate"
     },
     "options": {
       "outputFormat": {
@@ -130,6 +133,7 @@
       "multiResize": {
         "toggle": "Dimensioni multiple",
         "addVariant": "+ Aggiungi dimensione",
+        "selectedSizes": "Dimensioni selezionate:",
         "modeLabel": "Modalità set",
         "mode": {
           "switch": "Sostituisci",
@@ -176,7 +180,11 @@
     "ratio": {
       "free": "Libero"
     },
-    "hint": "Trascina la cornice o gli angoli. L’area resta sempre dentro l’immagine."
+    "hint": "Trascina la cornice o gli angoli. L’area resta sempre dentro l’immagine.",
+    "preview": {
+      "title": "Anteprima live",
+      "hint": "L’anteprima si aggiorna mentre sposti o ridimensioni il ritaglio."
+    }
   },
   "previewGrid": {
     "remove": { "title": "Rimuovi" },

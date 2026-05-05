@@ -114,7 +114,10 @@
       "processing": "Conversion..."
     },
     "limits": {
-      "freeLimitExceeded": "Limite du mode gratuit : {count} images source"
+      "freeLimitExceeded": "Limite du mode gratuit : {count} images source",
+      "freeResizeMultiSourceImage": "Le multi-tailles gratuit n’autorise qu’une seule image source",
+      "freeResizeMultiOutputSizes": "Le multi-tailles gratuit autorise jusqu’à {count} tailles de sortie",
+      "freeResizeMultiSelectedSizes": "Le multi-tailles gratuit autorise jusqu’à {count} tailles sélectionnées"
     },
     "options": {
       "outputFormat": {
@@ -130,6 +133,7 @@
       "multiResize": {
         "toggle": "Tailles multiples",
         "addVariant": "+ Ajouter une taille",
+        "selectedSizes": "Tailles sélectionnées :",
         "modeLabel": "Mode des ensembles",
         "mode": {
           "switch": "Remplacer",
@@ -176,7 +180,11 @@
     "ratio": {
       "free": "Libre"
     },
-    "hint": "Faites glisser le cadre ou les coins. La zone reste toujours à l’intérieur de l’image."
+    "hint": "Faites glisser le cadre ou les coins. La zone reste toujours à l’intérieur de l’image.",
+    "preview": {
+      "title": "Aperçu en direct",
+      "hint": "L’aperçu se met à jour pendant le déplacement et le redimensionnement du recadrage."
+    }
   },
   "previewGrid": {
     "remove": { "title": "Supprimer" },

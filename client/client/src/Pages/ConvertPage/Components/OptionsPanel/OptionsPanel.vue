@@ -36,10 +36,18 @@
 
       <div v-if="model.multiResize" :class="s.variants">
         <div :class="s.actionsRow">
-          <button type="button" :class="s.btnGhost" :disabled="multiResizeDisabled" @click="addVariant()">{{ $t('convert.options.multiResize.addVariant') }}</button>
+          <button type="button" :class="s.btnGhost" :disabled="multiResizeDisabled" @click="onAddVariant">{{ $t('convert.options.multiResize.addVariant') }}</button>
           <button type="button" :class="s.btnGhost" :disabled="multiResizeDisabled" @click="resetAll()">{{ $t('common.actions.resetAll') }}</button>
           <button type="button" :class="s.btnGhost" :disabled="multiResizeDisabled" @click="sortAll()">{{ $t('common.actions.sort') }}</button>
         </div>
+
+        <div v-if="showSelectedSizesCounter" :class="[s.limitBadge, selectedSizesOverLimit && s.limitBadgeWarn]">
+          {{ $t('convert.options.multiResize.selectedSizes') }} <strong>{{ validVariantCount }} / 10</strong>
+        </div>
+
+        <p v-if="showSelectedSizesCounter && selectedSizesOverLimit" :class="[s.muted, s.warningText]">
+          {{ $t('convert.limits.freeResizeMultiSelectedSizes', { count: 10 }) }}
+        </p>
 
         <div :class="s.presetArea">
           <!-- левая колонка: режим -->
@@ -74,11 +82,11 @@
           <!-- правая колонка: сетка пресетов -->
           <div :class="s.buttonsCol">
             <div :class="s.presetGrid">
-              <button type="button" :class="[s.presetBtn, isSetActive('desktop') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('desktop')">{{ $t('convert.options.multiResize.presets.desktop') }}</button>
-              <button type="button" :class="[s.presetBtn, isSetActive('tablet') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('tablet')">{{ $t('convert.options.multiResize.presets.tablet') }}</button>
-              <button type="button" :class="[s.presetBtn, isSetActive('phone') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('phone')">{{ $t('convert.options.multiResize.presets.phone') }}</button>
-              <button type="button" :class="[s.presetBtn, isSetActive('all') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('all')">{{ $t('convert.options.multiResize.presets.all') }}</button>
-              <button type="button" :class="[s.presetBtn, isSetActive('macro1') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="applySet('macro1')">{{ $t('convert.options.multiResize.presets.macro1') }}</button>
+              <button type="button" :class="[s.presetBtn, isSetActive('desktop') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="onApplySet('desktop')">{{ $t('convert.options.multiResize.presets.desktop') }}</button>
+              <button type="button" :class="[s.presetBtn, isSetActive('tablet') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="onApplySet('tablet')">{{ $t('convert.options.multiResize.presets.tablet') }}</button>
+              <button type="button" :class="[s.presetBtn, isSetActive('phone') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="onApplySet('phone')">{{ $t('convert.options.multiResize.presets.phone') }}</button>
+              <button type="button" :class="[s.presetBtn, isSetActive('all') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="onApplySet('all')">{{ $t('convert.options.multiResize.presets.all') }}</button>
+              <button type="button" :class="[s.presetBtn, isSetActive('macro1') && s.presetBtnActive]" :disabled="multiResizeDisabled" @click="onApplySet('macro1')">{{ $t('convert.options.multiResize.presets.macro1') }}</button>
             </div>
           </div>
         </div>
@@ -129,8 +137,6 @@
 
     <div v-if="showOptimizeSection" :class="s.row">
       <label :class="s.checkbox"><input type="checkbox" v-model="model.stripMetadata"> {{ $t('convert.options.optimize.stripMetadata') }}</label>
-      <label :class="s.checkbox"><input type="checkbox" v-model="model.minSize"> {{ $t('convert.options.optimize.minSize') }}</label>
-      <label :class="s.checkbox"><input type="checkbox" v-model="model.smartSubsample"> {{ $t('convert.options.optimize.smartSubsample') }}</label>
     </div>
 
     <slot />
@@ -144,6 +150,7 @@ import { computed, ref, watch } from 'vue'   // 👈 добавляем
 import type { ConvertOptions, MultiResizeMode } from '@/shared/types/image'
 import type { OptimizerMode } from '@/Pages/Home/config/toolsConfig'
 import type { AppMode } from '@/shared/types/appConfig'
+import type { SetKey } from '@/Pages/ConvertPage/Composables/useMultiResize'
 
 export type OptionsModel = ConvertOptions
 
@@ -163,16 +170,17 @@ const isCompress = computed(() => props.mode === 'compress')
 const isResize = computed(() => props.mode === 'resize')
 const isFormat = computed(() => props.mode === 'format')
 const isFreeMode = computed(() => props.appMode === 'free')
+const isResizeFreeMode = computed(() => isFreeMode.value && isResize.value)
 const isLossyFormat = computed(() =>
     model.value.outputFormat === 'jpeg' ||
     model.value.outputFormat === 'webp' ||
     model.value.outputFormat === 'avif'
 )
 
-const showFormatSection = computed(() => isAllInOne.value || isResize.value || isFormat.value)
+const showFormatSection = computed(() => isAllInOne.value || isFormat.value)
 const showResizeSection = computed(() => isAllInOne.value || isResize.value)
 const showMultiResizeSection = computed(() => isAllInOne.value || isResize.value)
-const showFoldersSection = computed(() => isAllInOne.value || (isResize.value && !isFreeMode.value))
+const showFoldersSection = computed(() => isAllInOne.value || isResize.value)
 const showLosslessSection = computed(() => isAllInOne.value)
 const showQualitySection = computed(() =>
     isAllInOne.value ||
@@ -181,7 +189,26 @@ const showQualitySection = computed(() =>
 )
 const showTargetSizeSection = computed(() => isAllInOne.value || isCompress.value)
 const showOptimizeSection = computed(() => isAllInOne.value || isCompress.value)
-const multiResizeDisabled = computed(() => isFreeMode.value && showMultiResizeSection.value)
+const multiResizeDisabled = computed(() => false)
+const validVariantCount = computed(() =>
+    (model.value.variants || []).filter((variant) => (variant.w && variant.w > 0) || (variant.h && variant.h > 0)).length
+)
+const showSelectedSizesCounter = computed(() =>
+    isFreeMode.value &&
+    (isResize.value || isAllInOne.value) &&
+    !!model.value.multiResize
+)
+const selectedSizesOverLimit = computed(() =>
+    showSelectedSizesCounter.value && validVariantCount.value > 10
+)
+
+function onAddVariant() {
+  addVariant()
+}
+
+function onApplySet(key: SetKey) {
+  applySet(key)
+}
 
 // --- режим мультисетов
 function onToggleMode(e: Event) {
@@ -221,8 +248,9 @@ watch(
 watch(
     () => [props.appMode, props.mode] as const,
     ([appMode, mode]) => {
-      if (appMode === 'free' && (mode === 'all-in-one' || mode === 'resize')) {
-        model.value.multiResize = false
+      if (mode === 'all-in-one' || mode === 'compress') {
+        model.value.minSize = true
+        model.value.smartSubsample = true
       }
 
       if (appMode === 'free' && mode === 'format') {

@@ -166,6 +166,7 @@ export function useMultiResize(model: Ref<OptionsLike>) {
         resetAll,
         sortAll,
         applySet,
+        getPack,
         isSetActive,
     }
 }

@@ -114,7 +114,10 @@
       "processing": "Konvertierung..."
     },
     "limits": {
-      "freeLimitExceeded": "Limit im kostenlosen Modus: {count} Quellbilder"
+      "freeLimitExceeded": "Limit im kostenlosen Modus: {count} Quellbilder",
+      "freeResizeMultiSourceImage": "Im kostenlosen Multi-Size-Modus ist nur 1 Quellbild erlaubt",
+      "freeResizeMultiOutputSizes": "Im kostenlosen Multi-Size-Modus sind bis zu {count} Ausgabegrößen erlaubt",
+      "freeResizeMultiSelectedSizes": "Im kostenlosen Multi-Size-Modus sind bis zu {count} ausgewählte Größen erlaubt"
     },
     "options": {
       "outputFormat": {
@@ -130,6 +133,7 @@
       "multiResize": {
         "toggle": "Mehrere Größen",
         "addVariant": "+ Größe hinzufügen",
+        "selectedSizes": "Ausgewählte Größen:",
         "modeLabel": "Set-Modus",
         "mode": {
           "switch": "Wechseln",
@@ -176,7 +180,11 @@
     "ratio": {
       "free": "Frei"
     },
-    "hint": "Ziehe den Rahmen oder die Ecken. Der Bereich bleibt immer innerhalb des Bildes."
+    "hint": "Ziehe den Rahmen oder die Ecken. Der Bereich bleibt immer innerhalb des Bildes.",
+    "preview": {
+      "title": "Live-Vorschau",
+      "hint": "Die Vorschau aktualisiert sich beim Verschieben und Ändern des Ausschnitts."
+    }
   },
   "previewGrid": {
     "remove": { "title": "Entfernen" },
